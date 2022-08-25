@@ -79,6 +79,8 @@ SUB_DIRECTORY = '/home/szjkelis/.config/mpv/scripts/bilibiliAssert/subs/'
 var cid;
 //在286行将let关键字去掉，变为
 cid = res.data.cid;
+//在344行将var关键字去掉，变为
+cid = episode.cid;
 //在179行变为(添加参数cid用于下载字幕)
 protocolLink = protocolLink + '--http-header-fields=referer:"' + currentUrl + ',user-agent:' + navigator.userAgent + '" ' +' --script-opts="cid=' + cid + '" ';
 ```

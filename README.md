@@ -1,14 +1,17 @@
 # 使用mpv自动下载弹幕并加载
 
-
 配合https://github.com/LuckyPuppy514/Play-With-MPV  油猴脚本
 仅需一键即可将bilibili弹幕加载到mpv上
+本项目同时支持 Windows, Linux, Macos(也许) 
+（仍在测试）
+
 ## 内容列表
 
 - [使用 MPV 播放网页中的视频](#使用-mpv-播放网页中的视频)
   - [内容列表](#内容列表)
   - [背景](#背景)
-    - [特别感谢](#特别感谢)
+    - [配合油猴脚本](#配合油猴脚本)
+  - [加载原理](#加载原理)
   - [安装](#安装)
     - [1. 安装 mpv 或 mpv-lazy](#1-安装-mpv-或-mpv-lazy)
     - [2. 安装油猴插件](#2-安装油猴插件)
@@ -23,61 +26,36 @@
 
 ## 背景
 
-最近在使用 MPV + Anime4K 播放动漫，效果显著，但是每次都需要下载播放比较麻烦，所以找了不少插件或脚本，但是不太适合自己，所以自己写了这个项目
+mpv加载弹幕的过程太过于繁琐，需要手动寻找cid下载xml弹幕，随后将xml转换成ass文件之后再手动加载到视频当中，于是就诞生了这个小插件
 
-### 特别感谢
+### 配合脚本
 
-使用过的插件或脚本：
+搭配油猴脚本：https://greasyfork.org/en/scripts/416271-play-with-mpv
 
-1. 谷歌插件：[ff2mpv](https://github.com/woodruffw/ff2mpv)
+github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 
-> 支持 youtube，其他不清楚，应该是支持 youtube-dl 的网站都可以
-> 安装过程很详细，要仔细安装，但是我只有 youtube 能用上 🤣
+配合该油猴脚本可以实现b站视频流一键推送到mpv，一键加载视频弹幕
 
-2. 油猴脚本：[play-with-mpv](https://greasyfork.org/zh-CN/scripts/416271-play-with-mpv)
-支持：
-clips.twitch.tv
-www.bilibili.com/video
-www.youtube.com
-m.youtube.com
+> 目前仍需对该油猴脚本代码进行修改才能正常运行
 
-> 安装了没用上，主要不支持b站番剧/bangumi，难受 🤣
+## 加载原理
 
-3. 油猴脚本：[Bilibili-Evolved](https://github.com/the1812/Bilibili-Evolved) + [playwithmpv](https://github.com/videoanywhere/playwithmpv)
+1.使用mpv的 --script-opts 参数给此插件传递视频的cid，
 
-> 一开始在用的版本，就是要点几次按钮，稍微有点麻烦，教程可以参看我的 [B站视频](https://www.bilibili.com/video/BV1zY41137uX)
+2.插件获取视频的cid后拉起python自动完成下载xml字幕文件并转换为.ass文件存放到指定目录
 
-这几个项目大概思路
+3.插件得到python发出的done提示后，重新加载指定目录下的ass文件即可完成加载
 
-```text
-ff2mpv 和 play-with-mpv
-1. 通过谷歌插件或油猴脚本获取当前网页链接
-2. 通过自定义 URL Protocol 调用脚本（py，ps1等）解析参数
-3. 通过脚本（py，ps1等）调用 MPV 播放
-
-但是许多网址无法直接通过 MPV + yt-dlp 解析播放
-
-Bilibili-Evolved + playwithmpv
-1. 通过B站接口获取 flv地址
-2. 通过 playwithmpv 服务，传递 flv地址给 mpv 进行播放
-
-点击功能-选集-开始播放-播放，稍微有点麻烦 🤣，这个是写这个项目的原因之一
-```
-
-本项目思路结合以上方式，以及通过抓取视频地址，添加了一些自己常用的网址
-
-```text
-1. 通过油猴脚本抓取网页视频 mp4，m3u8，flv 等真实地址，其中：
-   a. youtube 直接获取当前网页地址，通过 yt-dlp 解析
-   b. bilibili 通过B站 api 获取视频 flv地址
-   c. ddys.tv，www.dmla.cc，www.dm233.me 等抓取网页中的视频链接
-
-2. 通过自定义 URL Protocol 调用 MPV 播放视频
-```
 
 ## 安装
 
-### 1. 安装 mpv 或 mpv-lazy
+### 1.安装Play-With-MPV油猴脚本
+
+- 本mpv插件运行在Play-With-MPV 油猴脚本基础上，请先依据Play-With-MPV主页安装完成
+- 油猴脚本主页： https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
+
+### 2.将本仓库所有文件
+ ### 1. 安装 mpv 或 mpv-lazy
 
 - 选项一：[🌟 mpv](https://github.com/mpv-player/mpv) + [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 - 选项二（推荐）：[🌟🌟mpv-lazy](https://www.lckp.top/archives/mpv-lazy)

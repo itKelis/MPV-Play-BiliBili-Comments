@@ -25,9 +25,9 @@ function assert()
     local a = table.args
 
 	a[#a + 1] = py_path
-	a[#a + 1] = '-d'
-	a[#a + 1] = directory
-	a[#a + 1] = cid --> submpv command ends with the movie/tvshow name/filename
+-- 	a[#a + 1] = '-d'
+-- 	a[#a + 1] = directory
+	a[#a + 1] = cid --> cid get from script
 
 	-- run command and capture stdout
 	local result = utils.subprocess(table)

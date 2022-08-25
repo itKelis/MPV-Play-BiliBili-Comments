@@ -49,12 +49,26 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 
 ## 安装
 
+
 ### 1.安装Play-With-MPV油猴脚本
 
 - 本mpv插件运行在Play-With-MPV 油猴脚本基础上，请先依据Play-With-MPV主页安装完成
 - 油猴脚本主页： https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 
-### 2.将本仓库所有文件放在mpv/scripts/Bilibili
+### 2.将本仓库scripts文件夹下载到mpv配置目录
+
+Windows 的配置目录默认为: C:/Users/<你的用户名>/AppData/Roaming/mpv
+Linux 的配置目录默认为: /home/<yourname>/.config/mpv
+  
+### 3.
+### 4
+
+### 2
+
+  
+
+ ### 3.将
+
  ### 1. 安装 mpv 或 mpv-lazy
 
 - 选项一：[🌟 mpv](https://github.com/mpv-player/mpv) + [yt-dlp](https://github.com/yt-dlp/yt-dlp)

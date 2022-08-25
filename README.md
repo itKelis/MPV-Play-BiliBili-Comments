@@ -54,7 +54,7 @@ Linux 的配置目录默认为:
 #Windows
 --sub-file-paths=sub:subtitles:Subs:C:/Users/<你的用户名>/AppData/Roaming/mpv/scripts/bilibiliAssert/subs/
 #Linux
-#--sub-file-paths=sub:subtitles:Subs:/home/szjkelis/<你的用户名>/.config/mpv/scripts/bilibiliAssert/subs/
+#--sub-file-paths=sub:subtitles:Subs:/home/<你的用户名>/.config/mpv/scripts/bilibiliAssert/subs/
 #
 #让弹幕更平滑
 vf=lavfi="fps=fps=60:round=down"

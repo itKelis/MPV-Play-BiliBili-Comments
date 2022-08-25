@@ -15,7 +15,7 @@ end
 
 -- download/load function
 function assert()
-	-- log('弹幕正在上膛')
+	log('弹幕正在上膛')
 
 	--get directory and filename
 	local directory,filename = utils.split_path(mp.get_property('path'))

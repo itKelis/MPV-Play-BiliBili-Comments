@@ -5,25 +5,6 @@
 - 本项目同时支持 Windows, Linux, Macos(也许) 
 -（仍在测试）
 
-## 内容列表
-
-- [使用 MPV 播放网页中的视频](#使用-mpv-播放网页中的视频)
-  - [内容列表](#内容列表)
-  - [背景](#背景)
-    - [配合油猴脚本](#配合油猴脚本)
-  - [加载原理](#加载原理)
-  - [安装](#安装)
-    - [1. 安装 Play-With-MPV油猴脚本](#1-安装-Play-With-MPV油猴脚本)
-    - [2. 安装油猴插件](#2-安装油猴插件)
-    - [3. 安装 Play-With-MPV 油猴脚本](#3-安装-play-with-mpv-油猴脚本)
-    - [4. 添加注册表信息](#4-添加注册表信息)
-  - [效果展示](#效果展示)
-  - [徽章](#徽章)
-  - [相关仓库](#相关仓库)
-  - [维护者](#维护者)
-  - [如何贡献](#如何贡献)
-  - [使用许可](#使用许可)
-
 ## 背景
 
 mpv加载弹幕的过程太过于繁琐，需要手动寻找cid下载xml弹幕，随后将xml转换成ass文件之后再手动加载到视频当中，于是就诞生了这个小插件
@@ -70,115 +51,38 @@ Linux 的配置目录默认为:
 将下列配置直接粘贴到mpv.conf中
 ``` text
 #让mpv自动搜索存放弹幕的文件夹(默认在插件文件夹的subs目录)
+#Windows
 --sub-file-paths=sub:subtitles:Subs:C:/Users/<你的用户名>/AppData/Roaming/mpv/scripts/bilibiliAssert/subs/
-
-
+#Linux
+#--sub-file-paths=sub:subtitles:Subs:/home/szjkelis/<你的用户名>/.config/mpv/scripts/bilibiliAssert/subs/
+#
+#让弹幕更平滑
+vf=lavfi="fps=fps=60:round=down"
 ```
-### 4
-
-### 2
-
-  
-
- ### 3.将
-
- ### 1. 安装 mpv 或 mpv-lazy
-
-- 选项一：[🌟 mpv](https://github.com/mpv-player/mpv) + [yt-dlp](https://github.com/yt-dlp/yt-dlp)
-- 选项二（推荐）：[🌟🌟mpv-lazy](https://www.lckp.top/archives/mpv-lazy)
-
-### 2. 安装油猴插件
-
-- [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)  
-- [Google Chrome](https://chrome.google.com/extensions/detail/dhdgffkkebhmkfjojejmpbldmpobfkfo)  
-- [Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)  
-- [360极速浏览器X](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)  
-- [其他 Chromium 内核浏览器](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
-
-### 3. 安装 Play-With-MPV 油猴脚本
-
-- [Play-With-MPV](https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv)
-
-### 4. 添加注册表信息
-
-```text
-Windows Registry Editor Version 5.00  
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome]
-"ExternalProtocolDialogShowAlwaysOpenCheckbox"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
-"ExternalProtocolDialogShowAlwaysOpenCheckbox"=dword:00000001
-
-[HKEY_CLASSES_ROOT\PlayWithMPV]
-@="PlayWithMPV Protocol"
-"URL Protocol"=""
-
-[HKEY_CLASSES_ROOT\PlayWithMPV\DefaultIcon]
-@=""
-
-[HKEY_CLASSES_ROOT\PlayWithMPV\shell]
-@=""
-
-[HKEY_CLASSES_ROOT\PlayWithMPV\shell\open]
-@=""
-
-[HKEY_CLASSES_ROOT\PlayWithMPV\shell\open\command]
-@="cmd /min /V:ON /C \"SET param=\"%1\" & SET param=!param:%%20= ! & SET param=!param:%%22=^\"! & SET param=!param:^\"playwithmpv://=! & D:\\daily\\mpv-lazy\\mpv.com !param:^\"^\"=^\"!\""
+### 4.配置main.lua
+找到scripts/bilibiliAssert/main.lua
+``` text
+local python_path = "/usr/bin/python"  -- 修改为你的python程序位置
+local scripts_path = '/home/szjkelis/.config/mpv/scripts' -- 修改为mpv的scripts目录位置
 ```
 
-复制上面的注册表信息，粘贴到记事本，修改最后一行中的
-
-```text
-D:\\daily\\mpv-lazy\\mpv.com
+### 5.配置convertAss.py
+找到scripts/bilibiliAssert/convertAss.py
+``` text
+#修改为存放弹幕的文件夹
+SUB_DIRECTORY = '/home/szjkelis/.config/mpv/scripts/bilibiliAssert/subs/' 
+```
+### 6.修改油猴脚本
+打开油猴脚本的代码
+``` text
+//在146行修添加全局变量 cid
+var cid;
+//在286行将let关键字去掉，变为
+cid = res.data.cid;
+//在179行变为(添加参数cid用于下载字幕)
+protocolLink = protocolLink + '--http-header-fields=referer:"' + currentUrl + ',user-agent:' + navigator.userAgent + '" ' +' --script-opts="cid=' + cid + '" ';
 ```
 
-为你的 mpv 路径，保存为 playwithmpv.reg，双击 playwithmpv.reg 添加到注册表即可
-
-> 🔥 注意：如果你是用 v2rayn 或者 clash 客户端科学上网，则需要把代理加上才可以，例如
-
-```text
-D:\\daily\\mpv-lazy\\mpv.com --http-proxy=http://127.0.0.1:10809 --ytdl-raw-options=proxy=[http://127.0.0.1:10809]
-```
-
-## 效果展示
-
-![work_on_bilibili_video_tuya](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/work_on_bilibili_video_tuya.jpg)
-
-![work_on_bilibili_bangumi_tuya](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/work_on_bilibili_bangumi_tuya.jpg)
-
-![work_on_ddrk_tuya](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/work_on_ddrk_tuya.jpg)
-
-![work_on_youtube_tuya](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/work_on_youtube_tuya.jpg)
-
-![work_on_plex_tuya](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/work_on_plex_tuya.jpg)
-
-![work_on_6dmcc_tuya](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/work_on_6dmcc_tuya.jpg)
-
-![work_on_dm233_tuya](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/work_on_dm233_tuya.jpg)
-
-## 徽章
-
-[![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
-
-## 相关仓库
-
-- [mpv](https://github.com/mpv-player/mpv) — mpv播放器。
-- [mpv-lazy](https://github.com/hooke007/MPV_lazy) — mpv播放器懒人版。
-- [yt-dlp](https://github.com/yt-dlp/yt-dlp) — 视频下载。
-- [ff2mpv](https://github.com/woodruffw/ff2mpv) — 谷歌 MPV 插件。
-- [Bilibili-Evolved](https://github.com/the1812/Bilibili-Evolved) - B站增强脚本
-- [playwithmpv](https://github.com/videoanywhere/playwithmpv) — B站增强脚本 MPV 播放插件
-- [Anime4K](https://github.com/bloc97/Anime4K) — 动漫画质增强
-- [Glsl_Running_Mode_Cache](https://github.com/LuckyPuppy514/MPV_Glsl_Running_Mode_Cache) — MPV 着色器运行模式缓存
-
-## 维护者
-
-[@LuckyPuppy514](https://github.com/LuckyPuppy514)
-
-## 如何贡献
-
-非常欢迎你的加入！[提一个 Issue](https://github.com/LuckyPuppy514/Play-With-MPV/issues/new) 或者提交一个 Pull Request。
-
-## 使用许可
-
-[MIT](https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/LICENSE) © LuckyPuppy514
+## 完成
+在网页中点击mpv图标将视频流传输到mpv后按下b键即可自动加载弹幕
+- 如果希望更改快捷键，在main.lua中最后一行修改想要的快捷键

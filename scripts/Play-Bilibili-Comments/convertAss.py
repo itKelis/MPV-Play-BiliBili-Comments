@@ -3,7 +3,10 @@ import io
 import logging
 import requests
 import sys
-from Danmu2Ass import ReadCommentsBilibili,FilterBadChars, ProcessComments
+from mu import ReadCommentsBilibili,FilterBadChars, ProcessComments
+
+SUB_DIRECTORY = '/home/szjkelis/.config/mpv/scripts/bilibiliAssert/subs/'
+SUB_PATH = SUB_DIRECTORY + 'bilibili.ass'
  
 test_id = 809097415
 def getComments(cid,font_size = 25):
@@ -32,7 +35,7 @@ def write2file(comments, directory, stage_width, stage_height,reserve_blank=0, f
         except:
             raise ValueError(_('Invalid regular expression: %s') % comment_filter)
     # with open(str(directory) +'/bilibili.ass', 'w', encoding='utf-8', errors='replace') as fo:
-    with open('/home/szjkelis/.config/mpv/scripts/bilibiliAssert/subs/bilibili.ass', 'w', encoding='utf-8', errors='replace') as fo:
+    with open(SUB_PATH, 'w', encoding='utf-8', errors='replace') as fo:
         ProcessComments(comments, fo, stage_width, stage_height, reserve_blank, font_face, font_size, text_opacity, duration_marquee, duration_still, filters_regex, is_reduce_comments, progress_callback)
 
 def main():
@@ -41,7 +44,7 @@ def main():
     #     sys.argv.append('--help')
     parser = argparse.ArgumentParser()
     # 是否输出到文件；输出到哪个文件
-    parser.add_argument('-d','--directory',metavar="",type=str, default='./', help='choose where to download sub by default:current directory')
+    parser.add_argument('-d','--directory',metavar="",type=str, help='choose where to download sub by default:current directory')
     #spacify download path
     parser.add_argument('-o', '--output', metavar=_('OUTPUT'), help=_('Output file'))
     # 屏幕画面大小
@@ -73,8 +76,6 @@ def main():
         height = int(height)
     except ValueError:
         raise ValueError(_('Invalid stage size: %r') % args.size)
-    with open("/home/szjkelis/a.txt", 'w') as f:
-        f.write(args.directory)
     comments = getComments(args.cid,args.fontsize)
     write2file(comments, args.directory, width, height, args.protect, args.font, args.fontsize, args.alpha,  args.duration_marquee, args.duration_still, args.filter, args.filter_file, args.reduce)
     print('done')

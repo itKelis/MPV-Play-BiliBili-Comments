@@ -58,15 +58,22 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 
 ### 2.将本仓库scripts文件夹下载到mpv配置目录
 
-``` text
 Windows 的配置目录默认为: 
-
+``` text
 "C:/Users/<你的用户名>/AppData/Roaming/mpv"
+```
 Linux 的配置目录默认为: 
-
+``` text
 "/home/<你的用户名>/.config/mpv"
  ```
-### 3.
+### 3.配置mpv.conf
+将下列配置直接粘贴到mpv.conf中
+``` text
+#让mpv自动搜索存放弹幕的文件夹(默认在插件文件夹的subs目录)
+--sub-file-paths=sub:subtitles:Subs:C:/Users/<你的用户名>/AppData/Roaming/mpv/scripts/bilibiliAssert/subs/
+
+
+```
 ### 4
 
 ### 2

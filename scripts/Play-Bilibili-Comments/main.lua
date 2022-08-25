@@ -2,7 +2,7 @@
 -- ===================|
 -- note to escape path for winodws (c:\\users\\user\\...)
 local python_path = '/usr/bin/python' -- path to python bin
-local scripts_path = '/home/szjkelis/.config/mpv/scripts' -- path to scripts folder 
+local scripts_path = '/home/itKelis/.config/mpv/scripts' -- path to scripts folder 
 local py_path = ''..scripts_path..'/bilibiliAssert/convertAss.py' -- don't change this one
 local utils = require 'mp.utils'
 

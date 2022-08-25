@@ -58,11 +58,12 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 
 ### 2.将本仓库scripts文件夹下载到mpv配置目录
 
-- 油猴脚本主页： https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
+``` text
 
 - Windows 的配置目录默认为: "C:/Users/<你的用户名>/AppData/Roaming/mpv"
 -  Linux 的配置目录默认为: "/home/<yourname>/.config/mpv"
-  
+ 
+ ```
 ### 3.
 ### 4
 

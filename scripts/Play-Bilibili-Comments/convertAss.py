@@ -43,10 +43,8 @@ def main():
     # if len(sys.argv) == 1:
     #     sys.argv.append('--help')
     parser = argparse.ArgumentParser()
-    # 是否输出到文件；输出到哪个文件
+    #下载弹幕的文件夹，暂时作废
     parser.add_argument('-d','--directory',metavar="",type=str, help='choose where to download sub by default:current directory')
-    #spacify download path
-    parser.add_argument('-o', '--output', metavar=_('OUTPUT'), help=_('Output file'))
     # 屏幕画面大小
     # parser.add_argument('-s', '--size', metavar=_('WIDTHxHEIGHT'), required=True, help=_('Stage size in pixels'))
     parser.add_argument('-s', '--size', metavar=_('WIDTHxHEIGHT'), help=_('Stage size in pixels'), type=str, default='1920x1080')

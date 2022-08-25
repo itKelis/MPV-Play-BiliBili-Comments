@@ -85,6 +85,12 @@ cid = episode.cid;
 protocolLink = protocolLink + '--http-header-fields=referer:"' + currentUrl + ',user-agent:' + navigator.userAgent + '" ' +' --script-opts="cid=' + cid + '" ';
 ```
 
-## 完成
+### 完成
 在网页中点击mpv图标将视频流传输到mpv后按下b键即可自动加载弹幕
+
 - 如果希望更改快捷键，在main.lua中最后一行修改想要的快捷键
+
+## 对弹幕的个性化定制
+本项目使用了danmaku2ass的代码，可以对弹幕的样式进行深度定制
+
+如有客制化需求，可以自行对convertAss.py进行修改

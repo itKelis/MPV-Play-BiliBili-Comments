@@ -5,7 +5,7 @@ import requests
 import sys
 from mu import ReadCommentsBilibili,FilterBadChars, ProcessComments
 
-SUB_DIRECTORY = '/home/szjkelis/.config/mpv/scripts/bilibiliAssert/subs/'
+SUB_DIRECTORY = '/home/itKelis/.config/mpv/scripts/bilibiliAssert/subs/'
 SUB_PATH = SUB_DIRECTORY + 'bilibili.ass'
  
 test_id = 809097415

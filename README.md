@@ -13,7 +13,7 @@
     - [配合油猴脚本](#配合油猴脚本)
   - [加载原理](#加载原理)
   - [安装](#安装)
-    - [1. 安装 mpv 或 mpv-lazy](#1-安装-mpv-或-mpv-lazy)
+    - [1. 安装 Play-With-MPV油猴脚本](#1-安装-Play-With-MPV油猴脚本)
     - [2. 安装油猴插件](#2-安装油猴插件)
     - [3. 安装 Play-With-MPV 油猴脚本](#3-安装-play-with-mpv-油猴脚本)
     - [4. 添加注册表信息](#4-添加注册表信息)
@@ -54,7 +54,7 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 - 本mpv插件运行在Play-With-MPV 油猴脚本基础上，请先依据Play-With-MPV主页安装完成
 - 油猴脚本主页： https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 
-### 2.将本仓库所有文件
+### 2.将本仓库所有文件放在mpv/scripts/Bilibili
  ### 1. 安装 mpv 或 mpv-lazy
 
 - 选项一：[🌟 mpv](https://github.com/mpv-player/mpv) + [yt-dlp](https://github.com/yt-dlp/yt-dlp)

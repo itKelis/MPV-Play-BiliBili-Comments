@@ -3,7 +3,7 @@ import io
 import logging
 import requests
 import sys
-from mu import ReadCommentsBilibili,FilterBadChars, ProcessComments
+from Danmu2Ass import ReadCommentsBilibili,FilterBadChars, ProcessComments
  
 test_id = 809097415
 def getComments(cid,font_size = 25):

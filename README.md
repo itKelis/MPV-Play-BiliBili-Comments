@@ -1,9 +1,9 @@
 # 使用mpv自动下载弹幕并加载
 
-配合https://github.com/LuckyPuppy514/Play-With-MPV  油猴脚本
-仅需一键即可将bilibili弹幕加载到mpv上
-本项目同时支持 Windows, Linux, Macos(也许) 
-（仍在测试）
+- 配合https://github.com/LuckyPuppy514/Play-With-MPV  油猴脚本
+- 仅需一键即可将bilibili弹幕加载到mpv上
+- 本项目同时支持 Windows, Linux, Macos(也许) 
+-（仍在测试）
 
 ## 内容列表
 

@@ -15,7 +15,7 @@ end
 
 -- download/load function
 function assert()
-	-- log('search for arabic subtitle!')
+	-- log('弹幕正在上膛')
 
 	--get directory and filename
 	local directory,filename = utils.split_path(mp.get_property('path'))
@@ -34,13 +34,13 @@ function assert()
 	log('see')
 
 	if string.find(result.stdout, 'done') then
-		log('Arabic subtitles ready!')
+		log('开火!')
 		-- to make sure all downloaded subtitle loaded
 		mp.set_property('sub-auto', 'all')
 		mp.command('sub-reload')
 		mp.commandv('rescan_external_files','reselect')
 	else
-		log('Arabic subtitles not found!')
+		log('哎呀弹幕丢失了，请检查网络或代码')
 	end
 end
 mp.add_key_binding('b',assert)

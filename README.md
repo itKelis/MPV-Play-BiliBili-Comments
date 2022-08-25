@@ -59,10 +59,10 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 ### 2.将本仓库scripts文件夹下载到mpv配置目录
 
 ``` text
-
-- Windows 的配置目录默认为: "C:/Users/<你的用户名>/AppData/Roaming/mpv"
--  Linux 的配置目录默认为: "/home/<yourname>/.config/mpv"
- 
+Windows 的配置目录默认为: 
+"C:/Users/<你的用户名>/AppData/Roaming/mpv"
+Linux 的配置目录默认为: 
+"/home/<你的用户名>/.config/mpv"
  ```
 ### 3.
 ### 4

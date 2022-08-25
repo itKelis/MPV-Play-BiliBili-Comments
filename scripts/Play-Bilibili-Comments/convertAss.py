@@ -51,7 +51,7 @@ def main():
     # 弹幕字体
     parser.add_argument('-fn', '--font', metavar=_('FONT'), help=_('Specify font face [default: %s]') % _('(FONT) sans-serif')[7:], default=_('(FONT) sans-serif')[7:])
     # 弹幕字体大小
-    parser.add_argument('-fs', '--fontsize', metavar=_('SIZE'), help=(_('Default font size [default: %s]') % 25), type=float, default=50.0) # initial = 25.0
+    parser.add_argument('-fs', '--fontsize', metavar=_('SIZE'), help=(_('Default font size [default: %s]') % 25), type=float, default=45.0) # initial = 25.0
     # 弹幕不透明度
     parser.add_argument('-a', '--alpha', metavar=_('ALPHA'), help=_('Text opacity'), type=float, default=0.9) # initial = 1.0
     # 滚动弹幕显示的持续时间

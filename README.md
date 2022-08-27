@@ -5,6 +5,8 @@
 - 本项目同时支持 Windows, Linux, Macos(也许) 
 -（仍在测试）
 
+windows系统使用windows文件夹下的代码
+
 ## 背景
 
 mpv加载弹幕的过程太过于繁琐，需要手动寻找cid下载xml弹幕，随后将xml转换成ass文件之后再手动加载到视频当中，于是就诞生了这个小插件

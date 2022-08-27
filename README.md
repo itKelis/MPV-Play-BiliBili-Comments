@@ -19,7 +19,11 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 
 配合该油猴脚本可以实现b站视频流一键推送到mpv，一键加载视频弹幕
 
-> 目前仍需对该油猴脚本代码进行修改才能正常运行
+> 如使用原版油猴脚本需根据步骤5对该油猴脚本代码进行修改才能正常运行
+
+或者油猴脚本可以使用我的修改版，无需执行步骤5
+
+点击即可，与原版共存：https://github.com/itKelis/BiliBili-Play-With-MPV/raw/main/play-with-mpv.user.js
 
 ## 加载原理
 
@@ -70,10 +74,8 @@ local python_path = "/usr/bin/python"  -- 修改为你的python程序位置注�
 local scripts_path = '/home/szjkelis/.config/mpv/scripts' -- 修改为mpv的scripts目录位置
 ```
 
-### 6.修改油猴脚本
+### 5.修改油猴脚本
 
-
-油猴脚本可以使用我的修改版，点击即可，与原版共存：https://github.com/itKelis/BiliBili-Play-With-MPV/raw/main/play-with-mpv.user.js
 
 打开油猴脚本的代码
 ``` text

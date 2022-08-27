@@ -43,7 +43,7 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 
 Windows 的配置目录默认为: 
 ``` text
-"C:/Users/<你的用户名>/AppData/Roaming/mpv"
+"C:\Users\<你的用户名>\AppData\Roaming\mpv"
 ```
 Linux 的配置目录默认为: 
 ``` text
@@ -54,26 +54,22 @@ Linux 的配置目录默认为:
 ``` text
 #让mpv自动搜索存放弹幕的文件夹(默认在插件文件夹的subs目录)
 #Windows
---sub-file-paths=sub:subtitles:Subs:C:/Users/<你的用户名>/AppData/Roaming/mpv/scripts/bilibiliAssert/subs/
+##windows下sub字段使用分号;
+--sub-file-paths=sub;subtitles;Subs;C:\\Users\\<你的用户名>\\AppData\\Roaming\\mpv\\scripts\\bilibiliAssert\\subs
 #Linux
+## 注意linux下sub字段使用冒号:
 #--sub-file-paths=sub:subtitles:Subs:/home/<你的用户名>/.config/mpv/scripts/bilibiliAssert/subs/
 #
 #让弹幕更平滑
-vf=lavfi="fps=fps=60:round=down"
+--sub-fps=60
 ```
 ### 4.配置main.lua
 找到scripts/bilibiliAssert/main.lua
 ``` text
-local python_path = "/usr/bin/python"  -- 修改为你的python程序位置
+local python_path = "/usr/bin/python"  -- 修改为你的python程序位置注意windows要两个斜杠
 local scripts_path = '/home/szjkelis/.config/mpv/scripts' -- 修改为mpv的scripts目录位置
 ```
 
-### 5.配置convertAss.py
-找到scripts/bilibiliAssert/convertAss.py
-``` text
-#修改为存放弹幕的文件夹
-SUB_DIRECTORY = '/home/szjkelis/.config/mpv/scripts/bilibiliAssert/subs/' 
-```
 ### 6.修改油猴脚本
 打开油猴脚本的代码
 ``` text

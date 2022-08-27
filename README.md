@@ -37,6 +37,9 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 ## 安装
 
 
+## 0.正在考虑编写自动配置的脚本
+
+
 ### 1.安装Play-With-MPV油猴脚本
 
 - 本mpv插件运行在Play-With-MPV 油猴脚本基础上，请先依据Play-With-MPV主页安装完成

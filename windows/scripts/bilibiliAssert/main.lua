@@ -18,15 +18,20 @@ function assert()
 	log('弹幕正在上膛')
 
 	--get directory and filename
-	local directory,filename = utils.split_path(mp.get_property('path'))
-    local table = { args = { python_path } }
+	local directory = mp.get_script_directory()
+	local cid = mp.get_opt("cid")
+	local table = { args = { python_path } }
+
+	local a = table.args
 	
-	cid = mp.get_opt("cid")
-    local a = table.args
+	if string.find(directory, "\\")
+	then
+		string.subs(directory, "/", "\\")
+	end
 
 	a[#a + 1] = py_path
 	a[#a + 1] = '-d'
-	a[#a + 1] = mp.get_script_directory()
+	a[#a + 1] = directory
 	a[#a + 1] = cid --> cid get from script
 
 	-- run command and capture stdout

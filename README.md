@@ -73,7 +73,7 @@ local scripts_path = '/home/szjkelis/.config/mpv/scripts' -- 修改为mpv的scri
 ### 6.修改油猴脚本
 
 
-油猴脚本可以使用我的修改版，点击即可安装，与原版共存：https://github.com/itKelis/BiliBili-Play-With-MPV/raw/main/play-with-mpv.user.js
+油猴脚本可以使用我的修改版，点击即可，与原版共存：https://github.com/itKelis/BiliBili-Play-With-MPV/raw/main/play-with-mpv.user.js
 
 打开油猴脚本的代码
 ``` text

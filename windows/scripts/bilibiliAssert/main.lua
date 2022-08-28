@@ -26,7 +26,7 @@ function assert()
 	
 	if string.find(directory, "\\")
 	then
-		string.subs(directory, "/", "\\")
+		string.gsub(directory, "/", "\\")
 	end
 
 	a[#a + 1] = py_path

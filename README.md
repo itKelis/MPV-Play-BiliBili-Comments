@@ -79,6 +79,7 @@ local scripts_path = '/home/szjkelis/.config/mpv/scripts' -- 修改为mpv的scri
 
 ### 5.修改油猴脚本
 
+如果安装了修改版的脚本就无需做下面的步骤
 
 打开油猴脚本的代码
 ``` text

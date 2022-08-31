@@ -3,6 +3,7 @@ import io
 import logging
 from urllib import request
 import sys
+import re
 from Danmu2Ass import ReadCommentsBilibili,FilterBadChars, ProcessComments
 
  
@@ -31,7 +32,7 @@ def write2file(comments, directory, stage_width, stage_height,reserve_blank=0, f
             raise ValueError(_('Invalid regular expression: %s') % comment_filter)
     # with open(str(directory) +'/bilibili.ass', 'w', encoding='utf-8', errors='replace') as fo:
     
-    with open(directory + '\\subs\\bilibili.ass', 'w', encoding='utf-8', errors='replace') as fo:
+    with open(directory + '\\bilibili.ass', 'w', encoding='utf-8', errors='replace') as fo:
         ProcessComments(comments, fo, stage_width, stage_height, reserve_blank, font_face, font_size, text_opacity, duration_marquee, duration_still, filters_regex, is_reduce_comments, progress_callback)
 
 def main():

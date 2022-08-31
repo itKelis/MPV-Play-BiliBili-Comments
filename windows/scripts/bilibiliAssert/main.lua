@@ -1,9 +1,7 @@
 -- assert lua script
 -- ===================|
 -- note to escape path for winodws (c:\\users\\user\\...)
-local python_path = 'C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python310\\python' -- path to python bin
-local scripts_path = 'C:\\Users\\Administrator\\AppData\\Roaming\\mpv\\scripts' -- path to scripts folder 
-local py_path = ''..scripts_path..'\\bilibiliAssert\\convertAss.py' -- don't change this one
+local python_path = 'python' -- path to python bin
 local utils = require 'mp.utils'
 
 -- Log function: log to both terminal and MPV OSD (On-Screen Display)
@@ -28,6 +26,8 @@ function assert()
 	then
 		string.gsub(directory, "/", "\\")
 	end
+
+	local py_path = ''..directory..'\\convertAss.py'
 
 	a[#a + 1] = py_path
 	a[#a + 1] = '-d'

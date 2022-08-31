@@ -1,7 +1,7 @@
 import argparse
 import io
 import logging
-import requests
+from urllib import request
 import sys
 from Danmu2Ass import ReadCommentsBilibili,FilterBadChars, ProcessComments
 
@@ -9,9 +9,7 @@ from Danmu2Ass import ReadCommentsBilibili,FilterBadChars, ProcessComments
 test_id = 809097415
 def getComments(cid,font_size = 25):
     url = 'https://comment.bilibili.com/{}.xml'.format(cid[0])
-    r=requests.get(url)
-    s=r.content.decode(encoding="utf-8")
-    # print(s)
+    s = request.urlopen(url).read().decode("utf-8")
     comments = []
     str_io = io.StringIO(s)
     comments.extend(ReadCommentsBilibili(FilterBadChars(str_io), font_size))

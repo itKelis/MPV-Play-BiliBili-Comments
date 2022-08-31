@@ -41,6 +41,7 @@ function assert()
 	if string.find(result.stdout, 'done') then
 		log('开火!')
 		-- to make sure all downloaded subtitle loaded
+		mp.set_property('sub-auto', 'no')
 		mp.set_property('sub-auto', 'all')
 		mp.command('sub-reload')
 		mp.commandv('rescan_external_files','reselect')

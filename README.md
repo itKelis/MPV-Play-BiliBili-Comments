@@ -19,12 +19,6 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 
 配合该油猴脚本可以实现b站视频流一键推送到mpv，一键加载视频弹幕
 
-> 如使用原版油猴脚本需根据步骤5对该油猴脚本代码进行修改才能正常运行
-
-或者油猴脚本可以使用我的修改版，无需执行步骤5
-
-点击即可，与原版共存：https://github.com/itKelis/BiliBili-Play-With-MPV/raw/main/play-with-mpv.user.js
-
 ## 加载原理
 
 1.使用mpv的 --script-opts 参数给此插件传递视频的cid，
@@ -62,35 +56,13 @@ Linux 的配置目录默认为:
 #让mpv自动搜索存放弹幕的文件夹(默认在插件文件夹的subs目录)
 #Windows
 ##windows下sub字段使用分号;
---sub-file-paths=sub;subtitles;Subs;C:\\Users\\<你的用户名>\\AppData\\Roaming\\mpv\\scripts\\bilibiliAssert\\subs
+--sub-file-paths=sub;subtitles;Subs;C:\\Users\\<你的用户名>\\AppData\\Roaming\\mpv\\scripts\\bilibiliAssert
 #Linux
 ## 注意linux下sub字段使用冒号:
-#--sub-file-paths=sub:subtitles:Subs:/home/<你的用户名>/.config/mpv/scripts/bilibiliAssert/subs/
+#--sub-file-paths=sub:subtitles:Subs:/home/<你的用户名>/.config/mpv/scripts/bilibiliAssert
 #
 #让弹幕更平滑
 --sub-fps=60
-```
-### 4.配置main.lua
-找到scripts/bilibiliAssert/main.lua
-``` text
-local python_path = "/usr/bin/python"  -- 修改为你的python程序位置注意windows要两个斜杠
-local scripts_path = '/home/szjkelis/.config/mpv/scripts' -- 修改为mpv的scripts目录位置
-```
-
-### 5.修改油猴脚本
-
-如果安装了修改版的脚本就无需做下面的步骤
-
-打开油猴脚本的代码
-``` text
-//在146行修添加全局变量 cid
-var cid;
-//在286行将let关键字去掉，变为
-cid = res.data.cid;
-//在344行将var关键字去掉，变为
-cid = episode.cid;
-//在179行变为(添加参数cid用于下载字幕)
-protocolLink = protocolLink + '--http-header-fields=referer:"' + currentUrl + ',user-agent:' + navigator.userAgent + '" ' +' --script-opts="cid=' + cid + '" ';
 ```
 
 ### 完成

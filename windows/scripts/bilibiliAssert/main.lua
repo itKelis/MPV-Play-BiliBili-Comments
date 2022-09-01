@@ -19,7 +19,7 @@ function assert()
 	local directory = mp.get_script_directory()
 	local cid = mp.get_opt("cid")
 	local table = { args = { python_path } }
-
+ 
 	local a = table.args
 	
 	if string.find(directory, "\\")

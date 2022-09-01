@@ -2,19 +2,20 @@ import argparse
 import io
 import logging
 from urllib import request
-import requetst
-import sys
 import re
+import ssl
+import zlib
 from Danmu2Ass import ReadCommentsBilibili,FilterBadChars, ProcessComments
 
  
 test_id = 809097415
 def getComments(cid,font_size = 25):
     url = 'https://comment.bilibili.com/{}.xml'.format(cid[0])
-    r=requests.get(url)
-    s=r.content.decode(encoding="utf-8")
+    response = request.urlopen(url, context=ssl.SSLContext(ssl.PROTOCOL_TLS))
+    data = str(zlib.decompress(response.read(), -zlib.MAX_WBITS), "utf-8")
+    response.close()
     comments = []
-    str_io = io.StringIO(s)
+    str_io = io.StringIO(data)
     comments.extend(ReadCommentsBilibili(FilterBadChars(str_io), font_size))
     comments.sort()
     return comments

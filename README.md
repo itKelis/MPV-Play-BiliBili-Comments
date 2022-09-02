@@ -62,7 +62,7 @@ Linux 的配置目录默认为:
 #--sub-file-paths=sub:subtitles:Subs:/home/<你的用户名>/.config/mpv/scripts/bilibiliAssert
 #
 #让弹幕更平滑
---sub-fps=60
+vf=lavfi="fps=fps=60:round=down"
 ```
 
 ### 完成

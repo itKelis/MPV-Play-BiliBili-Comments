@@ -3,7 +3,7 @@
 - 配合https://github.com/LuckyPuppy514/Play-With-MPV  油猴脚本
 - 仅需一键即可将bilibili弹幕加载到mpv上
 - 本项目同时支持 Windows, Linux, Macos(也许) 
--（仍在测试）
+- 对原版Danmu2Ass进行性能优化
 
 windows系统使用windows文件夹下的代码
 

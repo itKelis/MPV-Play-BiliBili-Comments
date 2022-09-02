@@ -4,7 +4,6 @@
 # The original author m13253(github).
 
 import argparse
-import calendar
 import gettext
 import io
 import json
@@ -15,74 +14,19 @@ from pickle import TRUE
 import random
 from re import sub, compile
 import sys
-import time
 import xml.etree.cElementTree as ET 
-import platform
+import ssl
+import zlib
+from urllib import request
 
 # import heartrate
 # heartrate.trace(browser=True)
 
 
-if sys.version_info < (3,):
-    raise RuntimeError('at least Python 3.0 is required')
+# if sys.version_info < (3,):
+#     raise RuntimeError('at least Python 3.0 is required')
 
 gettext.install('danmaku2ass', os.path.join(os.path.dirname(os.path.abspath(os.path.realpath(sys.argv[0] or 'locale'))), 'locale'))
-
-
-def SeekZero(function):
-    def decorated_function(file_):
-        file_.seek(0)
-        try:
-            return function(file_)
-        finally:
-            file_.seek(0)
-    return decorated_function
-
-
-def EOFAsNone(function):
-    def decorated_function(*args, **kwargs):
-        try:
-            return function(*args, **kwargs)
-        except EOFError:
-            return None
-    return decorated_function
-
-
-@SeekZero
-@EOFAsNone
-def ProbeCommentFormat(f):
-    tmp = f.read(1)
-    if tmp == '[':
-        return 'Acfun'
-        # It is unwise to wrap a JSON object in an array!
-        # See this: http://haacked.com/archive/2008/11/20/anatomy-of-a-subtle-json-vulnerability.aspx/
-        # Do never follow what Acfun developers did!
-    elif tmp == '{':
-        tmp = f.read(14)
-        if tmp == '"status_code":':
-            return 'Tudou'
-        elif tmp.strip().startswith('"result'):
-            return 'Tudou2'
-    elif tmp == '<':
-        tmp = f.read(1)
-        if tmp == '?':
-            tmp = f.read(38)
-            if tmp == 'xml version="1.0" encoding="UTF-8"?><p':
-                return 'Niconico'
-            elif tmp == 'xml version="1.0" encoding="UTF-8"?><i':
-                return 'Bilibili'
-            elif tmp == 'xml version="1.0" encoding="utf-8"?><i':
-                return 'Bilibili'  # tucao.cc, with the same file format as Bilibili
-            elif tmp == 'xml version="1.0" encoding="Utf-8"?>\n<':
-                return 'Bilibili'  # Komica, with the same file format as Bilibili
-            elif tmp == 'xml version="1.0" encoding="UTF-8"?>\n<':
-                tmp = f.read(20)
-                if tmp == '!-- BoonSutazioData=':
-                    return 'Niconico'  # Niconico videos downloaded with NicoFox
-                else:
-                    return 'MioMio'
-        elif tmp == 'p':
-            return 'Niconico'  # Himawari Douga, with the same file format as Niconico Douga
 
 
 def ReadCommentsBilibili(f, fontsize):
@@ -108,10 +52,6 @@ def ReadCommentsBilibili(f, fontsize):
         except (AssertionError, AttributeError, IndexError, TypeError, ValueError):
             # logging.warning(_('Invalid comment: %s') % comment.toxml())
             continue
-
-
-
-# CommentFormatMap = {'Niconico': ReadCommentsNiconico, 'Acfun': ReadCommentsAcfun, 'Bilibili': ReadCommentsBilibili, 'Tudou': ReadCommentsTudou, 'Tudou2': ReadCommentsTudou2, 'MioMio': ReadCommentsMioMio}
 
 
 def WriteCommentBilibiliPositioned(f, c, width, height, styleid):
@@ -568,104 +508,55 @@ def export(func):
     return func
 
 
-def get_file(root_path, all_files=[]):
-    delimiter = '/'
-    if platform.system() == "Windows":
-        delimiter = '\\'
-
-    files = os.listdir(root_path)
-    for file in files:
-        if not os.path.isdir(root_path + delimiter + file):
-            all_files.append(root_path + delimiter + file)
-        else:
-            get_file((root_path + delimiter + file), all_files)
-    return all_files
-
-@export
-def Danmaku2ASS(input_files, input_format, output_file, stage_width, stage_height, reserve_blank=0, font_face=_('(FONT) sans-serif')[7:], font_size=25.0, text_opacity=1.0, duration_marquee=5.0, duration_still=5.0, comment_filter=None, comment_filters_file=None, is_reduce_comments=False, progress_callback=None):
-    comment_filters = [comment_filter]
-    if comment_filters_file:
-        with open(comment_filters_file, 'r') as f:
-            d = f.readlines()
-            comment_filters.extend([i.strip() for i in d])
-    filters_regex = []
-    for comment_filter in comment_filters:
-        try:
-            if comment_filter:
-                filters_regex.append(compile(comment_filter))
-        except:
-            raise ValueError(_('Invalid regular expression: %s') % comment_filter)
-    fo = None
-    comments = ReadComments(input_files, input_format, font_size)
-    try:
-        if output_file:
-            fo = ConvertToFile(output_file, 'w', encoding='utf-8-sig', errors='replace', newline='\r\n')
-        else:
-            fo = sys.stdout
-        ProcessComments(comments, fo, stage_width, stage_height, reserve_blank, font_face, font_size, text_opacity, duration_marquee, duration_still, filters_regex, is_reduce_comments, progress_callback)
-    finally:
-        if output_file and fo != output_file:
-            fo.close()
-
-
-@export
-def ReadComments(input_files, input_format, font_size=25.0, progress_callback=None):
-    if isinstance(input_files, bytes):
-        input_files = str(bytes(input_files).decode('utf-8', 'replace'))
-    if isinstance(input_files, str):
-        input_files = [input_files]
-    else:
-        input_files = list(input_files)
+def getComments(cid,font_size = 25):
+    # url = 'https://comment.bilibili.com/{}.xml'.format(cid[0])
+    url = ''.join(['https://comment.bilibili.com/',cid[0],'.xml'])
+    response = request.urlopen(url, context=ssl.SSLContext(ssl.PROTOCOL_TLS))
+    data = str(zlib.decompress(response.read(), -zlib.MAX_WBITS), "utf-8")
+    response.close()
     comments = []
-    for idx, i in enumerate(input_files):
-        if progress_callback:
-            progress_callback(idx, len(input_files))
-        with ConvertToFile(i, 'r', encoding='utf-8', errors='replace') as f:
-            s = f.read()
-            str_io = io.StringIO(s)
-            if input_format == 'autodetect':
-                CommentProcessor = GetCommentProcessor(str_io)
-                if not CommentProcessor:
-                    raise ValueError(
-                        _('Failed to detect comment file format: %s') % i
-                    )
-            else:
-                CommentProcessor = CommentFormatMap.get(input_format)
-                if not CommentProcessor:
-                    raise ValueError(
-                        _('Unknown comment file format: %s') % input_format
-                    )
-            comments.extend(CommentProcessor(FilterBadChars(str_io), font_size))
-    # if progress_callback:
-    #     progress_callback(len(input_files), len(input_files))
+    str_io = io.StringIO(data)
+    comments.extend(ReadCommentsBilibili(FilterBadChars(str_io), font_size))
     comments.sort()
     return comments
 
+def write2file(comments, directory, stage_width, stage_height,reserve_blank=0, font_face=_('(FONT) sans-serif')[7:], font_size=25.0, text_opacity=1.0, duration_marquee=5.0, duration_still=5.0, comment_filter=None, comment_filters_file=None, is_reduce_comments=False, progress_callback=None):
+    filters_regex = []
+    if comment_filter and ( comment_filters or comment_filters_file):
+        comment_filters = [comment_filter]
+        if comment_filters_file:
+            with open(comment_filters_file, 'r') as f:
+                d = f.readlines()
+                comment_filters.extend([i.strip() for i in d])
+        
+        for comment_filter in comment_filters:
+            try:
+                if comment_filter:
+                    filters_regex.append(compile(comment_filter))
+            except:
+                raise ValueError(_('Invalid regular expression: %s') % comment_filter)
 
-@export
-def GetCommentProcessor(input_file):
-    return CommentFormatMap.get(ProbeCommentFormat(input_file))
-
+    with open(''.join([directory, '\\bilibili.ass']), 'w', encoding='utf-8', errors='replace') as fo:
+        ProcessComments(comments, fo, stage_width, stage_height, reserve_blank, font_face, font_size, text_opacity, duration_marquee, duration_still, filters_regex, is_reduce_comments, progress_callback)
 
 def main():
     logging.basicConfig(format='%(levelname)s: %(message)s')
-    if len(sys.argv) == 1:
-        sys.argv.append('--help')
+    # if len(sys.argv) == 1:
+    #     sys.argv.append('--help')
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--format', metavar=_('FORMAT'), help=_('Format of input file (autodetect|%s) [default: autodetect]') % '|'.join(i for i in CommentFormatMap), default='autodetect')
-    # 是否输出到文件；输出到哪个文件
-    parser.add_argument('-o', '--output', metavar=_('OUTPUT'), help=_('Output file'))
+    #下载弹幕的文件夹
+    parser.add_argument('-d','--directory',metavar="",type=str, help='choose where to download sub by default:current directory', default='./')
     # 屏幕画面大小
     # parser.add_argument('-s', '--size', metavar=_('WIDTHxHEIGHT'), required=True, help=_('Stage size in pixels'))
     parser.add_argument('-s', '--size', metavar=_('WIDTHxHEIGHT'), help=_('Stage size in pixels'), type=str, default='1920x1080')
     # 弹幕字体
     parser.add_argument('-fn', '--font', metavar=_('FONT'), help=_('Specify font face [default: %s]') % _('(FONT) sans-serif')[7:], default=_('(FONT) sans-serif')[7:])
     # 弹幕字体大小
-    parser.add_argument('-fs', '--fontsize', metavar=_('SIZE'), help=(_('Default font size [default: %s]') % 25), type=float, default=50.0) # initial = 25.0
+    parser.add_argument('-fs', '--fontsize', metavar=_('SIZE'), help=(_('Default font size [default: %s]') % 25), type=float, default=40.0) # initial = 25.0
     # 弹幕不透明度
     parser.add_argument('-a', '--alpha', metavar=_('ALPHA'), help=_('Text opacity'), type=float, default=0.9) # initial = 1.0
     # 滚动弹幕显示的持续时间
-    parser.add_argument('-dm', '--duration-marquee', metavar=_('SECONDS'), help=_('Duration of scrolling comment display [default: %s]') % 5, type=float, default=10.0) # initial = 5.0
+    parser.add_argument('-dm', '--duration-marquee', metavar=_('SECONDS'), help=_('Duration of scrolling comment display [default: %s]') % 5, type=float, default=6.0) # initial = 5.0
     # 静止弹幕显示的持续时间
     parser.add_argument('-ds', '--duration-still', metavar=_('SECONDS'), help=_('Duration of still comment display [default: %s]') % 5, type=float, default=5.0)
     # 正则表达式过滤评论
@@ -676,27 +567,20 @@ def main():
     # 当屏幕满时减少弹幕数
     parser.add_argument('-r', '--reduce', action='store_true', help=_('Reduce the amount of comments if stage is full'))
     # 弹幕文件
-    parser.add_argument('file', metavar=_('FILE'), nargs='+', help=_('Comment file to be processed'))
+    parser.add_argument('cid', metavar=_('CID'), nargs='+', help=_('Video cid to downlad comments'))
     args = parser.parse_args()
+    directory = args.directory
     try:
         width, height = str(args.size).split('x', 1)
         width = int(width)
         height = int(height)
     except ValueError:
         raise ValueError(_('Invalid stage size: %r') % args.size)
-    # Danmaku2ASS(args.file, args.format, args.output, width, height, args.protect, args.font, args.fontsize, args.alpha, args.duration_marquee, args.duration_still, args.filter, args.filter_file, args.reduce)
-    if os.path.isfile(args.file[0]):
-        Danmaku2ASS(args.file, args.format, args.file[0][:-4] + '.ass', width, height, args.protect, args.font, args.fontsize, args.alpha, args.duration_marquee, args.duration_still, args.filter, args.filter_file, args.reduce)
-        print(f"Succeed : {args.file[0]}")
-    elif os.path.isdir(args.file[0]):
-        files = get_file(args.file[0], [])
-        for i in files:
-            if i[-4:] == '.xml':
-                args.file[0] = i
-                Danmaku2ASS(args.file, args.format, args.file[0][:-4] + '.ass', width, height, args.protect, args.font, args.fontsize, args.alpha, args.duration_marquee, args.duration_still, args.filter, args.filter_file, args.reduce)
-                print(f"Succeed : {i}")
-    else:
-        print("InputError")
+    comments = getComments(args.cid,args.fontsize)
+    # print("get scripts folder {}, will download comments on folder subs".format(directory))
+    write2file(comments, directory, width, height, args.protect, args.font, args.fontsize, args.alpha,  args.duration_marquee, args.duration_still, args.filter, args.filter_file, args.reduce)
+    print('done')
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    
     main()

@@ -4,6 +4,7 @@
 - 仅需一键即可将bilibili弹幕加载到mpv上
 - 本项目同时支持 Windows, Linux, Macos(也许) 
 - 对原版Danmu2Ass进行性能优化
+- 弹幕体验与b站播放器几乎没有区别
 
 windows系统使用windows文件夹下的代码
 

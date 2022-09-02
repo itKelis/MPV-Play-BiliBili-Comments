@@ -27,7 +27,7 @@ function assert()
 		string.gsub(directory, "/", "\\")
 	end
 
-	local py_path = ''..directory..'\\convertAss.py'
+	local py_path = ''..directory..'\\Danmu2Ass.py'
 
 	a[#a + 1] = py_path
 	a[#a + 1] = '-d'
@@ -41,7 +41,7 @@ function assert()
 	if string.find(result.stdout, 'done') then
 		log('开火!')
 		-- to make sure all downloaded subtitle loaded
-		mp.set_property('sub-auto', 'no')
+		-- mp.set_property('sub-auto', 'no')
 		mp.set_property('sub-auto', 'all')
 		mp.command('sub-reload')
 		mp.commandv('rescan_external_files','reselect')

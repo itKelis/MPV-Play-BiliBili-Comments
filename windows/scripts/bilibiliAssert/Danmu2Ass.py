@@ -50,6 +50,7 @@ def ReadCommentsBilibili(f, fontsize):
                 elif p[1] == '8':
                     pass  # ignore scripted comment
         except (AssertionError, AttributeError, IndexError, TypeError, ValueError):
+            print("错误")
             # logging.warning(_('Invalid comment: %s') % comment.toxml())
             continue
 
@@ -517,7 +518,8 @@ def getComments(cid,font_size = 25):
     comments = []
     str_io = io.StringIO(data)
     comments.extend(ReadCommentsBilibili(FilterBadChars(str_io), font_size))
-    comments.sort()
+    comments.sort(key= lambda ele: ele[0])
+    # print(comments[2])
     return comments
 
 def write2file(comments, directory, stage_width, stage_height,reserve_blank=0, font_face=_('(FONT) sans-serif')[7:], font_size=25.0, text_opacity=1.0, duration_marquee=5.0, duration_still=5.0, comment_filter=None, comment_filters_file=None, is_reduce_comments=False, progress_callback=None):
@@ -552,9 +554,9 @@ def main():
     # 弹幕字体
     parser.add_argument('-fn', '--font', metavar=_('FONT'), help=_('Specify font face [default: %s]') % _('(FONT) sans-serif')[7:], default=_('(FONT) sans-serif')[7:])
     # 弹幕字体大小
-    parser.add_argument('-fs', '--fontsize', metavar=_('SIZE'), help=(_('Default font size [default: %s]') % 25), type=float, default=40.0) # initial = 25.0
+    parser.add_argument('-fs', '--fontsize', metavar=_('SIZE'), help=(_('Default font size [default: %s]') % 25), type=float, default=35.0) # initial = 25.0
     # 弹幕不透明度
-    parser.add_argument('-a', '--alpha', metavar=_('ALPHA'), help=_('Text opacity'), type=float, default=0.86) # initial = 1.0
+    parser.add_argument('-a', '--alpha', metavar=_('ALPHA'), help=_('Text opacity'), type=float, default=0.92) # initial = 1.0
     # 滚动弹幕显示的持续时间
     parser.add_argument('-dm', '--duration-marquee', metavar=_('SECONDS'), help=_('Duration of scrolling comment display [default: %s]') % 5, type=float, default=10.0) # initial = 5.0
     # 静止弹幕显示的持续时间

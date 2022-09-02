@@ -11,12 +11,16 @@ import json
 import logging
 import math
 import os
+from pickle import TRUE
 import random
-import re
+from re import sub, compile
 import sys
 import time
-import xml.dom.minidom
+import xml.etree.cElementTree as ET 
 import platform
+
+# import heartrate
+# heartrate.trace(browser=True)
 
 
 if sys.version_info < (3,):
@@ -81,59 +85,28 @@ def ProbeCommentFormat(f):
             return 'Niconico'  # Himawari Douga, with the same file format as Niconico Douga
 
 
-#
-# ReadComments**** protocol
-#
-# Input:
-#     f:         Input file
-#     fontsize:  Default font size
-#
-# Output:
-#     yield a tuple:
-#         (timeline, timestamp, no, comment, pos, color, size, height, width)
-#     timeline:  The position when the comment is replayed
-#     timestamp: The UNIX timestamp when the comment is submitted
-#     no:        A sequence of 1, 2, 3, ..., used for sorting
-#     comment:   The content of the comment
-#     pos:       0 for regular moving comment,
-#                1 for bottom centered comment,
-#                2 for top centered comment,
-#                3 for reversed moving comment
-#     color:     Font color represented in 0xRRGGBB,
-#                e.g. 0xffffff for white
-#     size:      Font size
-#     height:    The estimated height in pixels
-#                i.e. (comment.count('\n')+1)*size
-#     width:     The estimated width in pixels
-#                i.e. CalculateLength(comment)*size
-#
-# After implementing ReadComments****, make sure to update ProbeCommentFormat
-# and CommentFormatMap.
-#
-
-
-
-
 def ReadCommentsBilibili(f, fontsize):
-    dom = xml.dom.minidom.parse(f)
-    comment_element = dom.getElementsByTagName('d')
+    root = ET.parse(f)
+    one = set("1456")
+    test = set('145678')
+    comment_element = root.findall('d')
     for i, comment in enumerate(comment_element):
         try:
-            p = str(comment.getAttribute('p')).split(',')
+            p = str(comment.attrib['p']).split(',')
             assert len(p) >= 5
-            assert p[1] in ('1', '4', '5', '6', '7', '8')
-            if comment.childNodes.length > 0:
-                if p[1] in ('1', '4', '5', '6'):
-                    c = str(comment.childNodes[0].wholeText).replace('/n', '\n')
+            assert p[1] in test
+            if comment.text:
+                if p[1] in one:
+                    c = str(comment.text).replace('/n', '\n')
                     size = int(p[2]) * fontsize / 25.0
                     yield (float(p[0]), int(p[4]), i, c, {'1': 0, '4': 2, '5': 1, '6': 3}[p[1]], int(p[3]), size, (c.count('\n') + 1) * size, CalculateLength(c) * size)
                 elif p[1] == '7':  # positioned comment
-                    c = str(comment.childNodes[0].wholeText)
+                    c = str(comment.text)
                     yield (float(p[0]), int(p[4]), i, c, 'bilipos', int(p[3]), int(p[2]), 0, 0)
                 elif p[1] == '8':
                     pass  # ignore scripted comment
         except (AssertionError, AttributeError, IndexError, TypeError, ValueError):
-            logging.warning(_('Invalid comment: %s') % comment.toxml())
+            # logging.warning(_('Invalid comment: %s') % comment.toxml())
             continue
 
 
@@ -189,7 +162,7 @@ def WriteCommentBilibiliPositioned(f, c, width, height, styleid):
         from_rotarg = ConvertFlashRotation(rotate_y, rotate_z, from_x, from_y, width, height)
         to_rotarg = ConvertFlashRotation(rotate_y, rotate_z, to_x, to_y, width, height)
         styles = ['\\org(%d, %d)' % (width / 2, height / 2)]
-        if from_rotarg[0:2] == to_rotarg[0:2]:
+        if from_rotarg[0:2] is to_rotarg[0:2]:
             styles.append('\\pos(%.0f, %.0f)' % (from_rotarg[0:2]))
         else:
             styles.append('\\move(%.0f, %.0f, %.0f, %.0f, %.0f, %.0f)' % (from_rotarg[0:2] + to_rotarg[0:2] + (delay, delay + duration)))
@@ -387,16 +360,22 @@ def ProcessComments(comments, f, width, height, bottomReserved, fontface, fontsi
                     break
             if skip:
                 continue
-            row = 0
+            # row = 0
             rowmax = height - bottomReserved - i[7]
-            while row <= rowmax:
+            for row in range(int(rowmax)):
                 freerows = TestFreeRows(rows, i, row, width, height, bottomReserved, duration_marquee, duration_still)
                 if freerows >= i[7]:
                     MarkCommentRow(rows, i, row)
                     WriteComment(f, i, row, width, height, bottomReserved, fontsize, duration_marquee, duration_still, styleid)
                     break
-                else:
-                    row += freerows or 1
+            # while row <= rowmax:
+            #     freerows = TestFreeRows(rows, i, row, width, height, bottomReserved, duration_marquee, duration_still)
+            #     if freerows >= i[7]:
+            #         MarkCommentRow(rows, i, row)
+            #         WriteComment(f, i, row, width, height, bottomReserved, fontsize, duration_marquee, duration_still, styleid)
+            #         break
+            #     else:
+            #         row += freerows or 1
             else:
                 if not reduced:
                     row = FindAlternativeRow(rows, i, height, bottomReserved)
@@ -451,7 +430,7 @@ def FindAlternativeRow(rows, c, height, bottomReserved):
             res = row
     return res
 
-
+# @autojit
 def MarkCommentRow(rows, c, row):
     try:
         for i in range(row, row + math.ceil(c[7])):
@@ -474,11 +453,9 @@ Collisions: Normal
 WrapStyle: 2
 ScaledBorderAndShadow: yes
 YCbCr Matrix: TV.601
-
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: %(styleid)s, %(fontface)s, %(fontsize).0f, &H%(alpha)02XFFFFFF, &H%(alpha)02XFFFFFF, &H%(alpha)02X000000, &H%(alpha)02X000000, 1, 0, 0, 0, 100, 100, 0.00, 0.00, 1, %(outline).0f, 0, 7, 0, 0, 0, 0
-
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 ''' % {'width': width, 'height': height, 'fontface': fontface, 'fontsize': fontsize, 'alpha': 255 - round(alpha * 255), 'outline': max(fontsize / 25.0, 1), 'styleid': styleid}
@@ -531,7 +508,8 @@ def ConvertTimestamp(timestamp):
     hour, minute = divmod(timestamp, 360000)
     minute, second = divmod(minute, 6000)
     second, centsecond = divmod(second, 100)
-    return '%d:%02d:%02d.%02d' % (int(hour), int(minute), int(second), int(centsecond))
+    # return '%d:%02d:%02d.%02d' % (int(hour), int(minute), int(second), int(centsecond))
+    return f'{int(hour)}:{int(minute):02}:{int(second):02}.{int(centsecond):02}'
 
 
 def ConvertColor(RGB, width=1280, height=576):
@@ -568,7 +546,7 @@ def ConvertToFile(filename_or_file, *args, **kwargs):
 
 def FilterBadChars(f):
     s = f.read()
-    s = re.sub('[\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f]', '\ufffd', s)
+    s = sub('[\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f]', '\ufffd', s)
     return io.StringIO(s)
 
 
@@ -614,7 +592,7 @@ def Danmaku2ASS(input_files, input_format, output_file, stage_width, stage_heigh
     for comment_filter in comment_filters:
         try:
             if comment_filter:
-                filters_regex.append(re.compile(comment_filter))
+                filters_regex.append(compile(comment_filter))
         except:
             raise ValueError(_('Invalid regular expression: %s') % comment_filter)
     fo = None
@@ -658,8 +636,8 @@ def ReadComments(input_files, input_format, font_size=25.0, progress_callback=No
                         _('Unknown comment file format: %s') % input_format
                     )
             comments.extend(CommentProcessor(FilterBadChars(str_io), font_size))
-    if progress_callback:
-        progress_callback(len(input_files), len(input_files))
+    # if progress_callback:
+    #     progress_callback(len(input_files), len(input_files))
     comments.sort()
     return comments
 

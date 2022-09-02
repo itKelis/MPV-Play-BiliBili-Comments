@@ -76,7 +76,7 @@ def main():
     except ValueError:
         raise ValueError(_('Invalid stage size: %r') % args.size)
     comments = getComments(args.cid,args.fontsize)
-    print("get scripts folder {}, will download comments on folder subs".format(directory))
+#     print("get scripts folder {}, will download comments on folder subs".format(directory))
     write2file(comments, directory, width, height, args.protect, args.font, args.fontsize, args.alpha,  args.duration_marquee, args.duration_still, args.filter, args.filter_file, args.reduce)
     print('done')
 

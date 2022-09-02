@@ -2,15 +2,16 @@ import argparse
 import io
 import logging
 from urllib import request
-import re
+from re import compile
 import ssl
 import zlib
 from Danmu2Ass import ReadCommentsBilibili,FilterBadChars, ProcessComments
 
  
-test_id = 809097415
+# test_id = 809097415
 def getComments(cid,font_size = 25):
-    url = 'https://comment.bilibili.com/{}.xml'.format(cid[0])
+    # url = 'https://comment.bilibili.com/{}.xml'.format(cid[0])
+    url = ''.join(['https://comment.bilibili.com/',cid[0],'.xml'])
     response = request.urlopen(url, context=ssl.SSLContext(ssl.PROTOCOL_TLS))
     data = str(zlib.decompress(response.read(), -zlib.MAX_WBITS), "utf-8")
     response.close()
@@ -21,21 +22,22 @@ def getComments(cid,font_size = 25):
     return comments
 
 def write2file(comments, directory, stage_width, stage_height,reserve_blank=0, font_face=_('(FONT) sans-serif')[7:], font_size=25.0, text_opacity=1.0, duration_marquee=5.0, duration_still=5.0, comment_filter=None, comment_filters_file=None, is_reduce_comments=False, progress_callback=None):
-    comment_filters = [comment_filter]
-    if comment_filters_file:
-        with open(comment_filters_file, 'r') as f:
-            d = f.readlines()
-            comment_filters.extend([i.strip() for i in d])
     filters_regex = []
-    for comment_filter in comment_filters:
-        try:
-            if comment_filter:
-                filters_regex.append(re.compile(comment_filter))
-        except:
-            raise ValueError(_('Invalid regular expression: %s') % comment_filter)
-    # with open(str(directory) +'/bilibili.ass', 'w', encoding='utf-8', errors='replace') as fo:
-    
-    with open(directory + '\\bilibili.ass', 'w', encoding='utf-8', errors='replace') as fo:
+    if comment_filter and ( comment_filters or comment_filters_file):
+        comment_filters = [comment_filter]
+        if comment_filters_file:
+            with open(comment_filters_file, 'r') as f:
+                d = f.readlines()
+                comment_filters.extend([i.strip() for i in d])
+        
+        for comment_filter in comment_filters:
+            try:
+                if comment_filter:
+                    filters_regex.append(compile(comment_filter))
+            except:
+                raise ValueError(_('Invalid regular expression: %s') % comment_filter)
+
+    with open(''.join([directory, '\\bilibili.ass']), 'w', encoding='utf-8', errors='replace') as fo:
         ProcessComments(comments, fo, stage_width, stage_height, reserve_blank, font_face, font_size, text_opacity, duration_marquee, duration_still, filters_regex, is_reduce_comments, progress_callback)
 
 def main():
@@ -44,7 +46,7 @@ def main():
     #     sys.argv.append('--help')
     parser = argparse.ArgumentParser()
     #下载弹幕的文件夹
-    parser.add_argument('-d','--directory',metavar="",type=str, help='choose where to download sub by default:current directory')
+    parser.add_argument('-d','--directory',metavar="",type=str, help='choose where to download sub by default:current directory', default='./')
     # 屏幕画面大小
     # parser.add_argument('-s', '--size', metavar=_('WIDTHxHEIGHT'), required=True, help=_('Stage size in pixels'))
     parser.add_argument('-s', '--size', metavar=_('WIDTHxHEIGHT'), help=_('Stage size in pixels'), type=str, default='1920x1080')
@@ -76,7 +78,7 @@ def main():
     except ValueError:
         raise ValueError(_('Invalid stage size: %r') % args.size)
     comments = getComments(args.cid,args.fontsize)
-#     print("get scripts folder {}, will download comments on folder subs".format(directory))
+    # print("get scripts folder {}, will download comments on folder subs".format(directory))
     write2file(comments, directory, width, height, args.protect, args.font, args.fontsize, args.alpha,  args.duration_marquee, args.duration_still, args.filter, args.filter_file, args.reduce)
     print('done')
 
@@ -84,5 +86,4 @@ if __name__ == "__main__":
     
     main()
     
-
 

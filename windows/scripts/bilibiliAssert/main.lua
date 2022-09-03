@@ -17,10 +17,8 @@ function assert()
 
 	--get directory and filename
 	local directory = mp.get_script_directory()
-	local cid = mp.get_opt("cid")
-	local table = { args = { python_path } }
- 
-	local a = table.args
+	local cid = mp.get_opt('cid')
+
 	
 	if string.find(directory, "\\")
 	then
@@ -29,13 +27,15 @@ function assert()
 
 	local py_path = ''..directory..'\\Danmu2Ass.py'
 
-	a[#a + 1] = py_path
-	a[#a + 1] = '-d'
-	a[#a + 1] = directory
-	a[#a + 1] = cid --> cid get from script
+	local arg = { 'python', py_path, '-d', directory, cid}
+	-- local arg = { ''..directory..'\\Danmu2Ass.exe', '-d', directory, cid}
 
-	-- run command and capture stdout
-	local result = utils.subprocess(table)
+	local result = mp.command_native({
+		name = 'subprocess',
+		playback_only = false,
+		capture_stdout = true,
+		args = arg,
+	})
 	log(result.stdout)
 
 	if string.find(result.stdout, 'done') then

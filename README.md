@@ -5,6 +5,7 @@
 - 本项目同时支持 Windows, Linux, Macos(也许) 
 - 对原版Danmu2Ass进行性能优化
 - 弹幕体验与b站播放器几乎没有区别
+- 核心代码由Danmu2Ass修改而来，python>=3.6即可运行，完全使用python内置库编写没有第三方库
 
 windows系统使用windows文件夹下的代码
 
@@ -66,6 +67,16 @@ Linux 的配置目录默认为:
 #与补帧插件冲突，启用补帧插件就不用加这个
 vf=lavfi="fps=fps=60:round=down"
 ```
+
+### 4.如果没有安装python
+本仓库还带有pyinstaller打包的可执行文件，但是运行速度将显著慢于直接使用python运行代码（基本在0.5秒内）
+默认不调用二进制可执行文件，如没有安装python可以考虑启用，开启方法：
+``` text
+#在main.lua中，将第一个arg注释，去除第二个arg的注释，如下：
+ -- local arg = { 'python', py_path, '-d', directory, cid}
+local arg = { ''..directory..'\\Danmu2Ass.exe', '-d', directory, cid}
+ ```
+
 
 ### 完成
 在网页中点击mpv图标将视频流传输到mpv后按下b键即可自动加载弹幕

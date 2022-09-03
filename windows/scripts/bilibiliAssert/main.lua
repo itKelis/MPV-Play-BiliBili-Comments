@@ -1,7 +1,7 @@
 -- assert lua script
 -- ===================|
 -- note to escape path for winodws (c:\\users\\user\\...)
-local python_path = 'python' -- path to python bin
+
 local utils = require 'mp.utils'
 
 -- Log function: log to both terminal and MPV OSD (On-Screen Display)
@@ -13,8 +13,9 @@ end
 
 -- download/load function
 function assert()
+	local python_path = 'python' -- path to python bin
 	log('弹幕正在上膛')
-
+	
 	--get directory and filename
 	local directory = mp.get_script_directory()
 	local cid = mp.get_opt('cid')

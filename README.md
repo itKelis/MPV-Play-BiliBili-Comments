@@ -56,9 +56,11 @@ Linux 的配置目录默认为:
 将下列配置直接粘贴到mpv.conf中
 ``` text
 #让mpv自动搜索存放弹幕的文件夹(默认在插件文件夹的subs目录)
+
 #Windows
 ##windows下sub字段使用分号;
 --sub-file-paths=sub;subtitles;Subs;C:\\Users\\<你的用户名>\\AppData\\Roaming\\mpv\\scripts\\bilibiliAssert
+
 #Linux
 ## 注意linux下sub字段使用冒号:
 #--sub-file-paths=sub:subtitles:Subs:/home/<你的用户名>/.config/mpv/scripts/bilibiliAssert

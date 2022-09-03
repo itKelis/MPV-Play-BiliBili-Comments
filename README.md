@@ -69,7 +69,8 @@ vf=lavfi="fps=fps=60:round=down"
 ```
 
 ### 4.如果没有安装python
-本仓库还带有pyinstaller打包的可执行文件，但是运行速度将显著慢于直接使用python运行代码（基本在0.5秒内）
+本仓库还带有pyinstaller打包的可执行文件
+运行速度将显著慢于直接使用python运行代码
 默认不调用二进制可执行文件，如没有安装python可以考虑启用，开启方法：
 ``` text
 #在main.lua中，将第一个arg注释，去除第二个arg的注释，如下：

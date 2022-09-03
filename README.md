@@ -82,6 +82,8 @@ local arg = { ''..directory..'\\Danmu2Ass.exe', '-d', directory, cid}
 ### 完成
 在网页中点击mpv图标将视频流传输到mpv后按下b键即可自动加载弹幕
 
+弹幕以字幕方式加载，如需隐藏按下v即可
+
 - 如果希望更改快捷键，在main.lua中最后一行修改想要的快捷键
 
 ## 对弹幕的个性化定制

@@ -5,7 +5,7 @@
 - 本项目同时支持 Windows, Linux, Macos(也许) 
 - 对原版Danmu2Ass进行性能优化
 - 弹幕体验与b站播放器几乎没有区别
-- 核心代码由Danmu2Ass修改而来，python>=3.6即可运行，完全使用python内置库编写没有第三方库
+- 核心代码由Danmu2Ass修改而来，python>=3.6即可运行，完全使用python内置库编写无需安装第三方库
 
 windows系统使用windows文件夹下的代码
 

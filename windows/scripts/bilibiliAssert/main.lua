@@ -13,9 +13,14 @@ end
 
 -- download/load function
 function assert()
+	local cid = mp.get_opt('cid')
+	if (cid == nil)
+	then
+		return
+	end
 	local python_path = 'python' -- path to python bin
-	log('弹幕正在上膛')
-	
+	-- log('弹幕正在上膛')
+
 	--get directory and filename
 	local directory = mp.get_script_directory()
 	local cid = mp.get_opt('cid')
@@ -37,12 +42,10 @@ function assert()
 		capture_stdout = true,
 		args = arg,
 	})
-	log(result.stdout)
+	-- log(result.stdout)
 
 	if string.find(result.stdout, 'done') then
 		log('开火!')
-		-- to make sure all downloaded subtitle loaded
-		-- mp.set_property('sub-auto', 'no')
 		mp.set_property('sub-auto', 'all')
 		mp.command('sub-reload')
 		mp.commandv('rescan_external_files','reselect')
@@ -51,3 +54,4 @@ function assert()
 	end
 end
 mp.add_key_binding('b',assert)
+mp.register_event("start-file", assert)

@@ -82,7 +82,9 @@ local arg = { ''..directory..'\\Danmu2Ass.exe', '-d', directory, cid}
 
 
 ### 完成
-在网页中点击mpv图标将视频流传输到mpv后按下b键即可自动加载弹幕
+在网页中点击mpv图标将视频流传输到mpv后将会自动加载弹幕
+
+按下b会重新载入弹幕
 
 弹幕以字幕方式加载，如需隐藏按下v即可
 

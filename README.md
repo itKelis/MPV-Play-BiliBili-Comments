@@ -42,8 +42,10 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 
 
 ### 2.（可选）配置mpv.conf
-如果没有补帧插件还是建议添加
+如果没有安装补帧插件还是建议添加
+
 将下列配置直接粘贴到mpv.conf中
+
 ``` text
 # 让弹幕更平滑
 # 与补帧插件冲突，启用补帧插件就不用加这个

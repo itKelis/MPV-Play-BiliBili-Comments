@@ -3,9 +3,9 @@
 - 配合https://github.com/LuckyPuppy514/Play-With-MPV  油猴脚本
 - 仅需一键即可将bilibili弹幕加载到mpv上
 - 本项目同时支持 Windows, Linux, Macos(也许) 
-- 对原版Danmu2Ass进行性能优化
 - 弹幕体验与b站播放器几乎没有区别
-- 核心代码由Danmu2Ass修改而来，python>=3.6即可运行，完全使用python内置库编写无需安装第三方库
+- 核心代码由Danmu2Ass修改而来，并对性能进行优化，加载时间可以忽略不计，python>=3.6即可运行，完全使用python内置库编写无需安装第三方库
+- 脚本使用异步加载，对视频加载速度无影响
 
 
 

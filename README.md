@@ -41,15 +41,16 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 - 油猴脚本主页： https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 
 
-### 2.配置mpv.conf
-(可选)将下列配置直接粘贴到mpv.conf中
+### （可选）2.配置mpv.conf
+如果没有补帧插件还是建议添加
+将下列配置直接粘贴到mpv.conf中
 ``` text
 # 让弹幕更平滑
 # 与补帧插件冲突，启用补帧插件就不用加这个
 vf-append=lavfi="fps=fps=60:round=down"
 ```
 
-### 3.如果没有安装python
+### 3.（可选）如果没有安装python
 本仓库还带有pyinstaller打包的可执行文件
 默认不调用二进制可执行文件，如没有安装python可以考虑启用，开启方法：
 ``` text

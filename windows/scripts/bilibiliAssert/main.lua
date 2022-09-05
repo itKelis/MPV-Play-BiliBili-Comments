@@ -46,7 +46,7 @@ function assert()
 	})
 	-- log(result.stdout)
 	
-	-- when download is done, load subs
+	-- load subs, when download succeed
 	if string.find(result.stdout, 'done') then
 		log('开火!')
 		mp.set_property_native("options/sub-file-paths", directory)

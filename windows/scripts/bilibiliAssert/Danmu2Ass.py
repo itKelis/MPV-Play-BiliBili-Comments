@@ -18,6 +18,7 @@ import xml.etree.cElementTree as ET
 import ssl
 import zlib
 from urllib import request
+import time
 
 # import heartrate
 # heartrate.trace(browser=True)
@@ -554,9 +555,9 @@ def main():
     # 弹幕字体
     parser.add_argument('-fn', '--font', metavar=_('FONT'), help=_('Specify font face [default: %s]') % _('(FONT) sans-serif')[7:], default=_('(FONT) sans-serif')[7:])
     # 弹幕字体大小
-    parser.add_argument('-fs', '--fontsize', metavar=_('SIZE'), help=(_('Default font size [default: %s]') % 25), type=float, default=35.0) # initial = 25.0
+    parser.add_argument('-fs', '--fontsize', metavar=_('SIZE'), help=(_('Default font size [default: %s]') % 25), type=float, default=37.0) # initial = 25.0
     # 弹幕不透明度
-    parser.add_argument('-a', '--alpha', metavar=_('ALPHA'), help=_('Text opacity'), type=float, default=0.92) # initial = 1.0
+    parser.add_argument('-a', '--alpha', metavar=_('ALPHA'), help=_('Text opacity'), type=float, default=0.95) # initial = 1.0
     # 滚动弹幕显示的持续时间
     parser.add_argument('-dm', '--duration-marquee', metavar=_('SECONDS'), help=_('Duration of scrolling comment display [default: %s]') % 5, type=float, default=10.0) # initial = 5.0
     # 静止弹幕显示的持续时间
@@ -581,7 +582,6 @@ def main():
     comments = getComments(args.cid,args.fontsize)
     # print("get scripts folder {}, will download comments on folder subs".format(directory))
     write2file(comments, directory, width, height, args.protect, args.font, args.fontsize, args.alpha,  args.duration_marquee, args.duration_still, args.filter, args.filter_file, args.reduce)
-    print('done')
 
 if __name__ == "__main__":
     

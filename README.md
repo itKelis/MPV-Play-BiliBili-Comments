@@ -4,7 +4,8 @@
 - 仅需一键即可将bilibili弹幕加载到mpv上
 - 本项目同时支持 Windows, Linux, Macos(也许) 
 - 弹幕体验与b站播放器几乎没有区别
-- 核心代码由Danmu2Ass修改而来，并对性能进行优化，加载时间可以忽略不计，python>=3.6即可运行，完全使用python内置库编写无需安装第三方库
+- 核心代码由Danmu2Ass修改而来，并对性能进行优化，加载时间可以忽略不计
+- python>=3.6即可运行，完全使用python内置库编写无需安装第三方库，并提供可执行文件，没有python也可以运行
 - 脚本使用异步加载，对视频加载速度无影响
 
 
@@ -50,7 +51,6 @@ vf-append=lavfi="fps=fps=60:round=down"
 
 ### 3.如果没有安装python
 本仓库还带有pyinstaller打包的可执行文件
-运行速度将显著慢于直接使用python运行代码
 默认不调用二进制可执行文件，如没有安装python可以考虑启用，开启方法：
 ``` text
 # 在main.lua中，将第一个arg注释，去除第二个arg的注释，如下：

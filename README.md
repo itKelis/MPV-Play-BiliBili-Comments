@@ -42,17 +42,8 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 
 - 油猴脚本主页： https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 
-### 2.将本仓库scripts文件夹下载到mpv配置目录
 
-Windows 的配置目录默认为: 
-``` text
-"C:\Users\<你的用户名>\AppData\Roaming\mpv"
-```
-Linux 的配置目录默认为: 
-``` text
-"/home/<你的用户名>/.config/mpv"
-```
-### 3.配置mpv.conf
+### 2.配置mpv.conf
 将下列配置直接粘贴到mpv.conf中
 ``` text
 # 让弹幕更平滑
@@ -60,7 +51,7 @@ Linux 的配置目录默认为:
 vf=lavfi="fps=fps=60:round=down"
 ```
 
-### 4.如果没有安装python
+### 3.如果没有安装python
 本仓库还带有pyinstaller打包的可执行文件
 运行速度将显著慢于直接使用python运行代码
 默认不调用二进制可执行文件，如没有安装python可以考虑启用，开启方法：

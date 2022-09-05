@@ -13,17 +13,18 @@ end
 
 -- download/load function
 function assert()
+	-- get video cid
 	local cid = mp.get_opt('cid')
 	if (cid == nil)
 	then
 		return
 	end
+	
 	local python_path = 'python' -- path to python bin
 	-- log('弹幕正在上膛')
 
-	-- get script directory and comment cid
+	-- get script directory 
 	local directory = mp.get_script_directory()
-	local cid = mp.get_opt('cid')
 
 	-- under windows platform, convert path format
 	if string.find(directory, "\\")

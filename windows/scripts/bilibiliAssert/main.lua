@@ -21,7 +21,6 @@ function assert()
 	end
 	
 	local python_path = 'python' -- path to python bin
-	-- log('弹幕正在上膛')
 
 	-- get script directory 
 	local directory = mp.get_script_directory()
@@ -37,26 +36,27 @@ function assert()
 	-- choose to use python or .exe
 	local arg = { 'python', py_path, '-d', directory, cid}
 	-- local arg = { ''..directory..'\\Danmu2Ass.exe', '-d', directory, cid}
-	
+	log('弹幕正在上膛')
 	-- run python to get comments
-	local result = mp.command_native({
+	mp.command_native_async({
 		name = 'subprocess',
 		playback_only = false,
 		capture_stdout = true,
 		args = arg,
-	})
-	-- log(result.stdout)
-	
-	-- load subs, when download succeed
-	if string.find(result.stdout, 'done') then
-		log('开火!')
-		mp.set_property_native("options/sub-file-paths", directory)
-		mp.set_property('sub-auto', 'all')
-		mp.command('sub-reload')
-		mp.commandv('rescan_external_files','reselect')
-	else
-		log('哎呀弹幕丢失了，请检查网络或代码')
-	end
+		capture_stdout = true
+	},function(res, val, err)
+		if err == nil
+		then
+			log('开火')
+			mp.set_property_native("options/sub-file-paths", directory)
+			mp.set_property('sub-auto', 'all')
+			mp.command('sub-reload')
+			mp.commandv('rescan_external_files','reselect')
+		else
+			log(err)
+		end
+	end)
+
 end
 
 

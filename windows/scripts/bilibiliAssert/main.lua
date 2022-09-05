@@ -59,5 +59,10 @@ function assert()
 	end
 end
 
-mp.add_key_binding('b',assert)
-mp.register_event("start-file", assert)
+-- async load comments, prevent slowing down the initiate
+function async_load()
+	mp.command_native_async(assert())
+end
+
+mp.add_key_binding('b',async_load)
+mp.register_event("start-file", async_load)

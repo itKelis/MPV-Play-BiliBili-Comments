@@ -51,20 +51,10 @@ Windows 的配置目录默认为:
 Linux 的配置目录默认为: 
 ``` text
 "/home/<你的用户名>/.config/mpv"
- ```
+```
 ### 3.配置mpv.conf
 将下列配置直接粘贴到mpv.conf中
 ``` text
-#让mpv自动搜索存放弹幕的文件夹(默认在插件文件夹的subs目录)
-
-#  Windows
-## windows下sub字段使用分号;
---sub-file-paths=sub;subtitles;Subs;C:\\Users\\<你的用户名>\\AppData\\Roaming\\mpv\\scripts\\bilibiliAssert
-
-#  Linux
-## linux下sub字段使用冒号:
-#--sub-file-paths=sub:subtitles:Subs:/home/<你的用户名>/.config/mpv/scripts/bilibiliAssert
-
 # 让弹幕更平滑
 # 与补帧插件冲突，启用补帧插件就不用加这个
 vf=lavfi="fps=fps=60:round=down"
@@ -78,7 +68,7 @@ vf=lavfi="fps=fps=60:round=down"
 # 在main.lua中，将第一个arg注释，去除第二个arg的注释，如下：
  -- local arg = { 'python', py_path, '-d', directory, cid}
 local arg = { ''..directory..'\\Danmu2Ass.exe', '-d', directory, cid}
- ```
+```
 
 
 ### 完成

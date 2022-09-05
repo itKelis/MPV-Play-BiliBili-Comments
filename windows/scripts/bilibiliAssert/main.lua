@@ -46,6 +46,9 @@ function assert()
 
 	if string.find(result.stdout, 'done') then
 		log('开火!')
+		local scripts_path = mp.find_config_file('scripts')
+		sub_path = scripts_path .. "/" .. "bilibiliAssert"
+		mp.set_property_native("options/sub-file-paths", sub_path)
 		mp.set_property('sub-auto', 'all')
 		mp.command('sub-reload')
 		mp.commandv('rescan_external_files','reselect')

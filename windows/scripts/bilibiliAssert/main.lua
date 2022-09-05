@@ -21,21 +21,23 @@ function assert()
 	local python_path = 'python' -- path to python bin
 	-- log('弹幕正在上膛')
 
-	--get directory and filename
+	-- get script directory and comment cid
 	local directory = mp.get_script_directory()
 	local cid = mp.get_opt('cid')
 
-	
+	-- under windows platform, convert path format
 	if string.find(directory, "\\")
 	then
 		string.gsub(directory, "/", "\\")
 	end
-
+	
 	local py_path = ''..directory..'\\Danmu2Ass.py'
-
+	
+	-- choose to use python or .exe
 	local arg = { 'python', py_path, '-d', directory, cid}
 	-- local arg = { ''..directory..'\\Danmu2Ass.exe', '-d', directory, cid}
-
+	
+	-- run python to get comments
 	local result = mp.command_native({
 		name = 'subprocess',
 		playback_only = false,
@@ -43,7 +45,8 @@ function assert()
 		args = arg,
 	})
 	-- log(result.stdout)
-
+	
+	-- when download is done, load subs
 	if string.find(result.stdout, 'done') then
 		log('开火!')
 		mp.set_property_native("options/sub-file-paths", directory)
@@ -54,5 +57,6 @@ function assert()
 		log('哎呀弹幕丢失了，请检查网络或代码')
 	end
 end
+
 mp.add_key_binding('b',assert)
 mp.register_event("start-file", assert)

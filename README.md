@@ -41,7 +41,7 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 - 油猴脚本主页： https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 
 
-### （可选）2.配置mpv.conf
+### 2.（可选）配置mpv.conf
 如果没有补帧插件还是建议添加
 将下列配置直接粘贴到mpv.conf中
 ``` text

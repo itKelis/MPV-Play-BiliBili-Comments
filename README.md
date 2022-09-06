@@ -37,7 +37,7 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 
 2.插件获取视频的cid后拉起python自动完成下载xml字幕文件并转换为.ass文件存放到指定目录
 
-3.插件得到python发出的done提示后，重新加载指定目录下的ass文件即可完成加载
+3.python执行完成后重新加载指定目录下的ass文件即可完成加载
 
 
 ## 安装

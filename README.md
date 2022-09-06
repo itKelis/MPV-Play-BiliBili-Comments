@@ -14,6 +14,17 @@
 
 mpv加载弹幕的过程太过于繁琐，需要手动寻找cid下载xml弹幕，随后将xml转换成ass文件之后再手动加载到视频当中，于是就诞生了这个小插件
 
+## 运行效果
+
+几乎没有区别
+
+b站播放器：
+![image](https://user-images.githubusercontent.com/14844805/188661589-3ace06fc-5f40-4a6e-adfb-a46c80fe01bf.png)
+
+mpv使用插件后：
+![image](https://user-images.githubusercontent.com/14844805/188661757-ff42a04c-60a6-4ab7-8bae-2bb260980751.png)
+
+
 ### 配合脚本
 
 搭配油猴脚本：https://greasyfork.org/en/scripts/416271-play-with-mpv

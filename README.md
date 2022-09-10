@@ -61,7 +61,7 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 vf-append=lavfi="fps=fps=60:round=down"
 ```
 
-### 3.（可选）如果没有安装python
+### 3.（可选）如果没有安装python（仅对windows有效）
 本仓库还带有pyinstaller打包的可执行文件
 默认不调用二进制可执行文件，如没有安装python可以考虑启用，开启方法：
 ``` text

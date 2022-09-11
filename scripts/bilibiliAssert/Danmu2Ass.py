@@ -538,8 +538,11 @@ def write2file(comments, directory, stage_width, stage_height,reserve_blank=0, f
                     filters_regex.append(compile(comment_filter))
             except:
                 raise ValueError(_('Invalid regular expression: %s') % comment_filter)
-
-    with open(''.join([directory, '\\bilibili.ass']), 'w', encoding='utf-8', errors='replace') as fo:
+                
+    ass_path = ''.join([directory, '/bilibili.ass']
+    if platform.platform().find('Windows') != -1:
+        ass_path = ''.join([directory, '\\bilibili.ass']
+    with open(ass_path, 'w', encoding='utf-8', errors='replace') as fo:
         ProcessComments(comments, fo, stage_width, stage_height, reserve_blank, font_face, font_size, text_opacity, duration_marquee, duration_still, filters_regex, is_reduce_comments, progress_callback)
 
 def main():

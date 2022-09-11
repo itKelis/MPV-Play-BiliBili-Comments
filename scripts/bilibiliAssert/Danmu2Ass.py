@@ -19,6 +19,7 @@ import ssl
 import zlib
 from urllib import request
 import time
+from platform import platform
 
 # import heartrate
 # heartrate.trace(browser=True)
@@ -525,6 +526,7 @@ def getComments(cid,font_size = 25):
 
 def write2file(comments, directory, stage_width, stage_height,reserve_blank=0, font_face=_('(FONT) sans-serif')[7:], font_size=25.0, text_opacity=1.0, duration_marquee=5.0, duration_still=5.0, comment_filter=None, comment_filters_file=None, is_reduce_comments=False, progress_callback=None):
     filters_regex = []
+    
     if comment_filter and ( comment_filters or comment_filters_file):
         comment_filters = [comment_filter]
         if comment_filters_file:
@@ -539,9 +541,11 @@ def write2file(comments, directory, stage_width, stage_height,reserve_blank=0, f
             except:
                 raise ValueError(_('Invalid regular expression: %s') % comment_filter)
                 
-    ass_path = ''.join([directory, '/bilibili.ass']
-    if platform.platform().find('Windows') != -1:
-        ass_path = ''.join([directory, '\\bilibili.ass']
+    ass_path = ''.join([directory, '/bilibili.ass'])
+
+    if (platform().find('Windows') != -1):
+        ass_path = ''.join([directory, '\\bilibili.ass'])
+
     with open(ass_path, 'w', encoding='utf-8', errors='replace') as fo:
         ProcessComments(comments, fo, stage_width, stage_height, reserve_blank, font_face, font_size, text_opacity, duration_marquee, duration_still, filters_regex, is_reduce_comments, progress_callback)
 

@@ -58,7 +58,8 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 ``` text
 # 让弹幕更平滑
 # 与补帧插件冲突，启用补帧插件就不用加这个
-vf-append=lavfi="fps=fps=60:round=down"
+# 注意这行尽量放配置文件的前面，最好放第一个
+vf=lavfi="fps=fps=60:round=down"
 ```
 
 ### 3.（可选）如果没有安装python（仅对windows有效）

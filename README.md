@@ -25,7 +25,7 @@ mpv使用插件后：
 
 ### 配合脚本
 
-搭配油猴脚本：https://greasyfork.org/en/scripts/416271-play-with-mpv
+搭配油猴脚本：https://greasyfork.org/en/scripts/444056-play-with-mpv
 
 github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 

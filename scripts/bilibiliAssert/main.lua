@@ -47,6 +47,7 @@ function assprocess()
 	'-ds', '5.0',
 	-- 保留底部多少高度的空白区域 (默认　０, 取值0.0-1.0)
 	'-p', '0',
+	'-r',
 	cid,
 }
 	-- local arg = { ''..directory..'\\Danmu2Ass.exe', '-d', directory, cid}

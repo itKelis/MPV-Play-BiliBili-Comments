@@ -24,13 +24,13 @@ function assprocess()
 
 	-- get script directory 
 	local directory = mp.get_script_directory()
-	local py_path = ''..directory..'\\Danmu2Ass.py'
+	local py_path = ''..directory..'/Danmu2Ass.py'
 
 	-- under windows platform, convert path format
 	if string.find(directory, "\\")
 	then
 		string.gsub(directory, "/", "\\")
-		py_path = ''..directory..'/Danmu2Ass.py'
+		py_path = ''..directory..'\\Danmu2Ass.py'
 	end
 	
 	-- choose to use python or .exe

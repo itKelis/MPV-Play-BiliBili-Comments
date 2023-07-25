@@ -81,6 +81,11 @@ local arg = { ''..directory..'\\Danmu2Ass.exe', '-d', directory, cid}
 
 - 如果希望更改快捷键，在main.lua中最后一行修改想要的快捷键
 
+### 注意
+如果打开MPV发现没有弹幕，请在Play-With-MPV的设置界面，将首选字幕选项设置为关闭
+![image](https://github.com/itKelis/MPV-Play-BiliBili-Comments/assets/14844805/aa442522-9276-406f-ba39-23bd333b1f9b)
+
+
 ## 对弹幕的个性化定制
 本项目使用了danmaku2ass的代码，可以对弹幕的样式进行深度定制
 

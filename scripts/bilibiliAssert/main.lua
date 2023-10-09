@@ -63,10 +63,10 @@ function assprocess()
 		if err == nil
 		then
 			log('开火')
-			mp.set_property_native("options/sub-file-paths", directory)
-			mp.set_property('sub-auto', 'all')
-			mp.command('sub-reload')
-			mp.commandv('rescan_external_files','reselect')
+			-- 挂载subtitles滤镜，注意加上@标签，这样即使多次调用也不会重复挂载，以最后一次为准
+			mp.commandv('vf', 'append', '@danmu:subtitles="'..directory..'/bilibili.ass"') 
+			-- 只能在软解或auto-copy硬解下生效，统一改为auto-copy硬解
+			mp.set_property('hwdec', 'auto-copy')
 		else
 			log(err)
 		end
@@ -74,6 +74,21 @@ function assprocess()
 
 end
 
+-- toggle function
+function asstoggle()
+	-- if exists @danmu filter， remove it
+	for _, f in ipairs(mp.get_property_native('vf')) do
+		if f.label == 'danmu' then
+			log('停火')
+			mp.commandv('vf', 'remove', '@danmu')
+			return
+		end
+	end
+	-- otherwise, load danmu
+	assprocess()
+end
 
-mp.add_key_binding('b',	assprocess)
-mp.register_event("start-file", assprocess)
+if mp.get_opt('cid') ~= nil then
+	mp.add_key_binding('b',	asstoggle)
+	mp.register_event("start-file", assprocess)
+end

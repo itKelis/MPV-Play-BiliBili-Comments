@@ -88,7 +88,6 @@ function asstoggle()
 	assprocess()
 end
 
-if mp.get_opt('cid') ~= nil then
-	mp.add_key_binding('b',	asstoggle)
-	mp.register_event("start-file", assprocess)
-end
+
+mp.add_key_binding('b', 'toggle', asstoggle)
+mp.register_event("start-file", assprocess)

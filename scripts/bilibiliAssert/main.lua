@@ -32,11 +32,12 @@ function assprocess()
 		string.gsub(directory, "/", "\\")
 		py_path = ''..directory..'\\Danmu2Ass.py'
 	end
-	
+	local dw = mp.get_property_osd('display-width')
+	local dh = mp.get_property_osd('display-height')
 	-- choose to use python or .exe
 	local arg = { 'python', py_path, '-d', directory, 
-	-- 设置屏幕分辨率 （默认 1920x1080)
-	'-s', '1920x1080',
+	-- 设置屏幕分辨率 （自动取值)
+	'-s', ''..dw..'x'..dh,
 	-- 设置字体大小    (默认 37.0)
 	'-fs',  '37.0',
 	-- 设置弹幕不透明度 (默认 0.95)
@@ -64,7 +65,7 @@ function assprocess()
 		then
 			log('开火')
 			-- 挂载subtitles滤镜，注意加上@标签，这样即使多次调用也不会重复挂载，以最后一次为准
-			mp.commandv('vf', 'append', '@danmu:subtitles="'..directory..'/bilibili.ass"') 
+			mp.commandv('vf', 'append', '@danmu:subtitles=filename="'..directory..'/bilibili.ass"')
 			-- 只能在软解或auto-copy硬解下生效，统一改为auto-copy硬解
 			mp.set_property('hwdec', 'auto-copy')
 		else
@@ -90,4 +91,4 @@ end
 
 
 mp.add_key_binding('b', 'toggle', asstoggle)
-mp.register_event("start-file", assprocess)
+mp.register_event("file-loaded", assprocess)

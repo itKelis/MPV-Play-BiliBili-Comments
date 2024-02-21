@@ -34,6 +34,16 @@ function assprocess()
 	end
 	local dw = mp.get_property_osd('display-width')
 	local dh = mp.get_property_osd('display-height')
+	local dw = mp.get_property_number('display-width', 1920)
+	local dh = mp.get_property_number('display-height', 1080)
+	local aspect = mp.get_property_number('width', 16) / mp.get_property_number('height', 9)
+	if aspect > dw / dh then
+		dh = math.floor(dw / aspect)
+	elseif aspect < dw / dh then
+		dw = math.floor(dh * aspect)
+	end
+	-- 保留底部多少高度的空白区域 (默认0, 取值0.0-1.0)
+	local percent = 0.75
 	-- choose to use python or .exe
 	local arg = { 'python', py_path, '-d', directory, 
 	-- 设置屏幕分辨率 （自动取值)
@@ -46,8 +56,7 @@ function assprocess()
 	'-dm', '10.0',
 	-- 静止弹幕显示的持续时间 (默认 5秒)
 	'-ds', '5.0',
-	-- 保留底部多少高度的空白区域 (默认　０, 取值0.0-1.0)
-	'-p', '0',
+	'-p', tostring(math.floor(percent*dh)),
 	'-r',
 	cid,
 }

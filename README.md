@@ -90,3 +90,9 @@ local arg = { ''..directory..'\\Danmu2Ass.exe', '-d', directory, cid}
 本项目使用了danmaku2ass的代码，可以对弹幕的样式进行深度定制
 
 如有客制化需求，可以自行对Danmu2Ass.py进行修改
+
+## 相关项目
+
+巴哈姆特弹幕
+https://github.com/s594569321/MPV-Play-BAHA-Comments
+

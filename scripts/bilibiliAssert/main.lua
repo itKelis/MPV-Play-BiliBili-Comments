@@ -8,6 +8,19 @@ local danmu_file = nil
 local sec_sub_visibility = mp.get_property_native("secondary-sub-visibility")
 local sec_sub_ass_override = mp.get_property_native("secondary-sub-ass-override")
 
+local function get_cid()
+	local cid, danmaku_id = nil, nil
+	local tracks = mp.get_property_native("track-list")
+	for _, track in ipairs(tracks) do
+		if track["lang"] == "danmaku" then
+			cid = track["external-filename"]:match("/(%d-)%.xml$")
+			danmaku_id = track["id"]
+			break
+		end
+	end
+	return cid, danmaku_id
+end
+
 local function get_sub_count()
 	local count  = 0
 	local tracks = mp.get_property_native("track-list")
@@ -38,7 +51,7 @@ end
 -- load function
 local function load_danmu(danmu_file)
 	if not file_exists(danmu_file) then return end
-	log('停火')
+	log('开火')
 	-- 如果可用将弹幕挂载为次字幕
 	if sec_sub_ass_override then
 		mp.commandv("sub-add", danmu_file, "auto")
@@ -56,18 +69,18 @@ end
 
 -- download function
 local function assprocess()
-	-- get video cid
-	local cid = mp.get_opt('cid')
-	if (cid == nil)
-	then
-		return
-	end
-
 	local path = mp.get_property("path")
 	if path and not path:find('^%a[%w.+-]-://') and not (path:find('bilibili.com') or path:find('bilivideo.com'))
-	then
-		return
+	then return end
+	-- get video cid
+	local cid = mp.get_opt('cid')
+	if cid == nil and path and path:find('^%a[%w.+-]-://') then
+		cid, danmaku_id = get_cid()
+		if danmaku_id ~= nil then
+			mp.commandv('sub-remove', danmaku_id)
+		end
 	end
+	if cid == nil then return end
 	
 	local python_path = 'python' -- path to python bin
 

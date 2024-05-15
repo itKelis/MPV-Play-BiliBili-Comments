@@ -1,6 +1,6 @@
 # 使用mpv自动下载弹幕并加载
 
-- 配合https://github.com/LuckyPuppy514/Play-With-MPV  油猴脚本
+- 配合 yt-dlp 或 https://github.com/LuckyPuppy514/Play-With-MPV  油猴脚本
 - 仅需一键即可将bilibili弹幕加载到mpv上
 - 本项目同时支持 Windows, Linux, Macos(也许) 
 - 弹幕体验与b站播放器几乎没有区别
@@ -23,7 +23,7 @@ mpv使用插件后：
 ![image](https://user-images.githubusercontent.com/14844805/188661757-ff42a04c-60a6-4ab7-8bae-2bb260980751.png)
 
 
-### 配合脚本
+### （可选）配合脚本
 
 搭配油猴脚本：https://greasyfork.org/en/scripts/444056-play-with-mpv
 
@@ -33,7 +33,7 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 
 ## 加载原理
 
-1.使用mpv的 --script-opts 参数给此插件传递视频的cid，
+1.使用mpv的 --script-opts 参数给此插件传递视频的cid，或 yt-dlp 传递的 danmaku 中的 cid
 
 2.插件获取视频的cid后拉起python自动完成下载xml字幕文件并转换为.ass文件存放到指定目录
 
@@ -43,7 +43,7 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 ## 安装
 
 
-### 1.安装Play-With-MPV油猴脚本
+### 1.（可选）安装Play-With-MPV油猴脚本
 
 - 本mpv插件运行在Play-With-MPV 油猴脚本基础上，请先依据Play-With-MPV主页安装完成
 

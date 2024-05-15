@@ -4,21 +4,83 @@
 
 local utils = require 'mp.utils'
 
+local danmu_file = nil
+local sec_sub_visibility = mp.get_property_native("secondary-sub-visibility")
+local sec_sub_ass_override = mp.get_property_native("secondary-sub-ass-override")
+
+local function get_cid()
+	local cid, danmaku_id = nil, nil
+	local tracks = mp.get_property_native("track-list")
+	for _, track in ipairs(tracks) do
+		if track["lang"] == "danmaku" then
+			cid = track["external-filename"]:match("/(%d-)%.xml$")
+			danmaku_id = track["id"]
+			break
+		end
+	end
+	return cid, danmaku_id
+end
+
+local function get_sub_count()
+	local count  = 0
+	local tracks = mp.get_property_native("track-list")
+	for _, track in ipairs(tracks) do
+		if track["type"] == "sub" then
+			count = count + 1
+		end
+	end
+	return count
+end
+
+local function file_exists(path)
+	if path then
+		local meta = utils.file_info(path)
+		return meta.is_file
+	else
+		return false
+	end
+end
+
 -- Log function: log to both terminal and MPV OSD (On-Screen Display)
-function log(string,secs)
+local function log(string,secs)
 	secs = secs or 2.5
 	mp.msg.warn(string)
 	mp.osd_message(string,secs)
 end
 
--- download/load function
-function assprocess()
+-- load function
+local function load_danmu(danmu_file)
+	if not file_exists(danmu_file) then return end
+	log('开火')
+	-- 如果可用将弹幕挂载为次字幕
+	if sec_sub_ass_override then
+		mp.commandv("sub-add", danmu_file, "auto")
+		local sub_count = get_sub_count()
+		mp.set_property_native("secondary-sub-ass-override", "yes")
+		mp.set_property_native("secondary-sid", sub_count)
+		mp.set_property_native("secondary-sub-visibility", true)
+	else
+		-- 挂载subtitles滤镜，注意加上@标签，这样即使多次调用也不会重复挂载，以最后一次为准
+		mp.commandv('vf', 'append', '@danmu:subtitles=filename="'..danmu_file..'"')
+		-- 只能在软解或auto-copy硬解下生效，统一改为auto-copy硬解
+		mp.set_property('hwdec', 'auto-copy')
+	end
+end
+
+-- download function
+local function assprocess()
+	local path = mp.get_property("path")
+	if path and not path:find('^%a[%w.+-]-://') and not (path:find('bilibili.com') or path:find('bilivideo.com'))
+	then return end
 	-- get video cid
 	local cid = mp.get_opt('cid')
-	if (cid == nil)
-	then
-		return
+	if cid == nil and path and path:find('^%a[%w.+-]-://') then
+		cid, danmaku_id = get_cid()
+		if danmaku_id ~= nil then
+			mp.commandv('sub-remove', danmaku_id)
+		end
 	end
+	if cid == nil then return end
 	
 	local python_path = 'python' -- path to python bin
 
@@ -72,11 +134,8 @@ function assprocess()
 	},function(res, val, err)
 		if err == nil
 		then
-			log('开火')
-			-- 挂载subtitles滤镜，注意加上@标签，这样即使多次调用也不会重复挂载，以最后一次为准
-			mp.commandv('vf', 'append', '@danmu:subtitles=filename="'..directory..'/bilibili.ass"')
-			-- 只能在软解或auto-copy硬解下生效，统一改为auto-copy硬解
-			mp.set_property('hwdec', 'auto-copy')
+			danmu_file = ''..directory..'/bilibili.ass'
+			load_danmu(danmu_file)
 		else
 			log(err)
 		end
@@ -86,18 +145,32 @@ end
 
 -- toggle function
 function asstoggle()
-	-- if exists @danmu filter， remove it
-	for _, f in ipairs(mp.get_property_native('vf')) do
-		if f.label == 'danmu' then
-			log('停火')
-			mp.commandv('vf', 'remove', '@danmu')
-			return
+	if not file_exists(danmu_file) then return end
+	local sec_visibility = mp.get_property_bool("secondary-sub-visibility")
+	if sec_sub_ass_override and sec_visibility then
+		log('停火')
+		mp.set_property_native("secondary-sub-visibility", false)
+		return
+	elseif sec_sub_ass_override == nil then
+		-- if exists @danmu filter， remove it
+		for _, f in ipairs(mp.get_property_native('vf')) do
+			if f.label == 'danmu' then
+				log('停火')
+				mp.commandv('vf', 'remove', '@danmu')
+				return
+			end
 		end
 	end
 	-- otherwise, load danmu
-	assprocess()
+	if file_exists(danmu_file) then load_danmu(danmu_file) end
 end
-
 
 mp.add_key_binding('b', 'toggle', asstoggle)
 mp.register_event("file-loaded", assprocess)
+mp.register_event("end-file", function()
+	asstoggle()
+	if sec_sub_ass_override then
+		mp.set_property_native("secondary-sub-visibility", sec_sub_visibility)
+		mp.set_property_native("secondary-sub-ass-override", sec_sub_ass_override)
+	end
+end)

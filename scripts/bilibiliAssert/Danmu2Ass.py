@@ -453,7 +453,7 @@ def write2file(comments, directory, stage_width, stage_height,reserve_blank=0, f
     if comment_filter and ( comment_filters or comment_filters_file):
         comment_filters = [comment_filter]
         if comment_filters_file:
-            with open(comment_filters_file, 'r') as f:
+            with open(comment_filters_file, 'r', encoding='utf-8') as f:
                 d = f.readlines()
                 comment_filters.extend([i.strip() for i in d])
         

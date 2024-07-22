@@ -3,6 +3,26 @@
 -- note to escape path for winodws (c:\\users\\user\\...)
 
 local utils = require 'mp.utils'
+local options = require 'mp.options'
+
+local o = {
+	--弹幕字体
+	fontname = "Microsoft YaHei",
+	--弹幕字体大小 
+	fontsize = "50",
+	--弹幕不透明度(0-1)
+	opacity = "0.95",
+	--滚动弹幕显示的持续时间 (秒)
+	duration_marquee = "10",
+	--静止弹幕显示的持续时间 (秒)
+	duration_still = "5",
+	--保留底部多少高度的空白区域 (取值0.0-1.0)
+	percent = "0.75",
+	--弹幕屏蔽的关键词文件路径，支持绝对和相对路径
+	filter_file = "",
+}
+
+options.read_options(o, _, function() end)
 
 local danmu_file = nil
 local sec_sub_visibility = mp.get_property_native("secondary-sub-visibility")
@@ -100,21 +120,16 @@ local function assprocess()
 	elseif aspect < dw / dh then
 		dw = math.floor(dh * aspect)
 	end
-	-- 保留底部多少高度的空白区域 (默认0, 取值0.0-1.0)
-	local percent = 0.75
 	-- choose to use python or .exe
 	local arg = { 'python', py_path, '-d', danmaku_dir, 
-	-- 设置屏幕分辨率 （自动取值)
 	'-s', ''..dw..'x'..dh,
-	-- 设置字体大小    (默认 37.0)
-	'-fs',  '37.0',
-	-- 设置弹幕不透明度 (默认 0.95)
-	'-a', '0.95',
-	-- 滚动弹幕显示的持续时间 (默认 10秒)
-	'-dm', '10.0',
-	-- 静止弹幕显示的持续时间 (默认 5秒)
-	'-ds', '5.0',
-	'-p', tostring(math.floor(percent*dh)),
+	'-fn', o.fontname,
+	'-fs',  o.fontsize,
+	'-a', o.opacity,
+	'-dm', o.duration_marquee,
+	'-ds', o.duration_still,
+	'-flf', mp.command_native({ "expand-path", o.filter_file }),
+	'-p', tostring(math.floor(o.percent*dh)),
 	'-r',
 	cid,
 }

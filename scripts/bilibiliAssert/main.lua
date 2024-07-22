@@ -83,6 +83,7 @@ local function assprocess()
 
 	-- get script directory 
 	local directory = mp.get_script_directory()
+	local danmaku_dir = utils.split_path(os.tmpname())
 	local py_path = ''..directory..'/Danmu2Ass.py'
 
 	-- under windows platform, convert path format
@@ -102,7 +103,7 @@ local function assprocess()
 	-- 保留底部多少高度的空白区域 (默认0, 取值0.0-1.0)
 	local percent = 0.75
 	-- choose to use python or .exe
-	local arg = { 'python', py_path, '-d', directory, 
+	local arg = { 'python', py_path, '-d', danmaku_dir, 
 	-- 设置屏幕分辨率 （自动取值)
 	'-s', ''..dw..'x'..dh,
 	-- 设置字体大小    (默认 37.0)
@@ -128,7 +129,7 @@ local function assprocess()
 	},function(res, val, err)
 		if err == nil
 		then
-			danmu_file = ''..directory..'/bilibili.ass'
+			danmu_file = ''..danmaku_dir..'/bilibili.ass'
 			load_danmu(danmu_file)
 		else
 			log(err)
@@ -163,6 +164,9 @@ mp.add_key_binding('b', 'toggle', asstoggle)
 mp.register_event("file-loaded", assprocess)
 mp.register_event("end-file", function()
 	asstoggle()
+	if file_exists(danmaku_file) then
+		os.remove(danmaku_file)
+	end
 	if sec_sub_ass_override then
 		mp.set_property_native("secondary-sub-visibility", sec_sub_visibility)
 		mp.set_property_native("secondary-sub-ass-override", sec_sub_ass_override)

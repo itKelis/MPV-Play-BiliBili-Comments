@@ -35,10 +35,9 @@ end
 local function file_exists(path)
 	if path then
 		local meta = utils.file_info(path)
-		return meta.is_file
-	else
-		return false
+		return meta and meta.is_file
 	end
+	return false
 end
 
 -- Log function: log to both terminal and MPV OSD (On-Screen Display)
@@ -81,8 +80,6 @@ local function assprocess()
 		end
 	end
 	if cid == nil then return end
-	
-	local python_path = 'python' -- path to python bin
 
 	-- get script directory 
 	local directory = mp.get_script_directory()
@@ -94,8 +91,6 @@ local function assprocess()
 		string.gsub(directory, "/", "\\")
 		py_path = ''..directory..'\\Danmu2Ass.py'
 	end
-	local dw = mp.get_property_osd('display-width')
-	local dh = mp.get_property_osd('display-height')
 	local dw = mp.get_property_number('display-width', 1920)
 	local dh = mp.get_property_number('display-height', 1080)
 	local aspect = mp.get_property_number('width', 16) / mp.get_property_number('height', 9)
@@ -130,7 +125,6 @@ local function assprocess()
 		playback_only = false,
 		capture_stdout = true,
 		args = arg,
-		capture_stdout = true
 	},function(res, val, err)
 		if err == nil
 		then

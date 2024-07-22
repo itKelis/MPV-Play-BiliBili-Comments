@@ -92,8 +92,8 @@ local function assprocess()
 		string.gsub(directory, "/", "\\")
 		py_path = ''..directory..'\\Danmu2Ass.py'
 	end
-	local dw = mp.get_property_number('display-width', 1920)
-	local dh = mp.get_property_number('display-height', 1080)
+	local dw = "1920"
+	local dh = "1080"
 	local aspect = mp.get_property_number('width', 16) / mp.get_property_number('height', 9)
 	if aspect > dw / dh then
 		dh = math.floor(dw / aspect)

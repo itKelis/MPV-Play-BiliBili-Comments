@@ -25,6 +25,7 @@ local o = {
 options.read_options(o, _, function() end)
 
 local danmu_file = nil
+local danmu_open = false
 local sec_sub_visibility = mp.get_property_native("secondary-sub-visibility")
 local sec_sub_ass_override = mp.get_property_native("secondary-sub-ass-override")
 
@@ -71,6 +72,7 @@ end
 local function load_danmu(danmu_file)
 	if not file_exists(danmu_file) then return end
 	log('开火')
+	danmu_open = true
 	-- 如果可用将弹幕挂载为次字幕
 	if sec_sub_ass_override then
 		mp.commandv("sub-add", danmu_file, "auto")
@@ -132,7 +134,7 @@ local function assprocess()
 	'-p', tostring(math.floor(o.percent*dh)),
 	'-r',
 	cid,
-}
+	}
 	-- local arg = { ''..directory..'\\Danmu2Ass.exe', '-d', directory, cid}
 	log('弹幕正在上膛')
 	-- run python to get comments
@@ -154,36 +156,40 @@ local function assprocess()
 end
 
 -- toggle function
-function asstoggle()
+function asstoggle(event)
 	if not file_exists(danmu_file) then return end
-	local sec_visibility = mp.get_property_bool("secondary-sub-visibility")
-	if sec_sub_ass_override and sec_visibility then
+	if danmu_open then
 		log('停火')
-		mp.set_property_native("secondary-sub-visibility", false)
-		return
-	elseif sec_sub_ass_override == nil then
-		-- if exists @danmu filter， remove it
-		for _, f in ipairs(mp.get_property_native('vf')) do
-			if f.label == 'danmu' then
-				log('停火')
-				mp.commandv('vf', 'remove', '@danmu')
-				return
+		danmu_open = false
+		if sec_sub_ass_override then
+			if event then
+				mp.set_property_native("secondary-sub-visibility", sec_sub_visibility)
+			else
+				mp.set_property_native("secondary-sub-visibility", false)
+			end
+			mp.set_property_native("secondary-sub-ass-override", sec_sub_ass_override)
+			return
+		elseif sec_sub_ass_override == nil then
+			-- if exists @danmaku filter， remove it
+			for _, f in ipairs(mp.get_property_native('vf')) do
+				if f.label == 'danmu' then
+					mp.commandv('vf', 'remove', '@danmu')
+					return
+				end
 			end
 		end
 	end
 	-- otherwise, load danmu
-	if file_exists(danmu_file) then load_danmu(danmu_file) end
+	if not event and file_exists(danmu_file) then
+		load_danmu(danmu_file)
+	end
 end
 
 mp.add_key_binding('b', 'toggle', asstoggle)
 mp.register_event("file-loaded", assprocess)
 mp.register_event("end-file", function()
-	asstoggle()
-	if file_exists(danmaku_file) then
-		os.remove(danmaku_file)
-	end
-	if sec_sub_ass_override then
-		mp.set_property_native("secondary-sub-visibility", sec_sub_visibility)
-		mp.set_property_native("secondary-sub-ass-override", sec_sub_ass_override)
+	asstoggle(true)
+	if file_exists(danmu_file) then
+		os.remove(danmu_file)
 	end
 end)

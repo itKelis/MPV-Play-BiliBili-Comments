@@ -7,7 +7,7 @@ local options = require 'mp.options'
 
 local o = {
 	--弹幕字体
-	fontname = "Microsoft YaHei",
+	fontname = mp.get_property('sub-font'),
 	--弹幕字体大小 
 	fontsize = "50",
 	--弹幕不透明度(0-1)

@@ -62,14 +62,11 @@ github主页: https://github.com/LuckyPuppy514/Play-With-MPV
 vf=lavfi="fps=fps=60:round=down"
 ```
 
-### 3.（可选）如果没有安装python（仅对windows有效）
-本仓库还带有pyinstaller打包的可执行文件
-默认不调用二进制可执行文件，如没有安装python可以考虑启用，开启方法：
+### 3.（可选）目前默认使用pyinstaller打包的可执行文件运行，使用命令行版可大幅提升运行速度
+
 ``` text
-# 在main.lua中，将第一个arg注释，去除第二个arg的注释，如下：
- -- local arg = { 'python', py_path, '-d', directory, cid}
-local arg = { ''..directory..'\\Danmu2Ass.exe', '-d', directory, cid}
-```
+# 本脚本默认调用二进制可执行文件，请使用非windows系统与有能力的朋友自行更改arg变量
+# 能大幅提升弹幕加载速度
 
 
 ### 完成

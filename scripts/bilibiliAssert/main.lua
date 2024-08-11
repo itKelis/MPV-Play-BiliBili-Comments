@@ -124,7 +124,19 @@ local function assprocess()
 		dw = math.floor(dh * aspect)
 	end
 	-- choose to use python or .exe
-	local arg = { 'python', py_path, '-d', danmaku_dir, 
+	-- local arg = { 'python', py_path, '-d', danmaku_dir, 
+	-- '-s', ''..dw..'x'..dh,
+	-- '-fn', o.fontname,
+	-- '-fs',  o.fontsize,
+	-- '-a', o.opacity,
+	-- '-dm', o.duration_marquee,
+	-- '-ds', o.duration_still,
+	-- '-flf', mp.command_native({ "expand-path", o.filter_file }),
+	-- '-p', tostring(math.floor(o.percent*dh)),
+	-- '-r',
+	-- cid,
+	-- }
+	local arg = { ''..directory..'\\Danmu2Ass.exe', py_path, '-d', danmaku_dir, 
 	'-s', ''..dw..'x'..dh,
 	'-fn', o.fontname,
 	'-fs',  o.fontsize,
@@ -136,7 +148,6 @@ local function assprocess()
 	'-r',
 	cid,
 	}
-	-- local arg = { ''..directory..'\\Danmu2Ass.exe', '-d', directory, cid}
 	log('弹幕正在上膛')
 	-- run python to get comments
 	mp.command_native_async({

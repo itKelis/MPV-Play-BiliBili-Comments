@@ -96,10 +96,10 @@ local function assprocess()
 	if path and not path:find('^%a[%w.+-]-://') and not (path:find('bilibili.com') or path:find('bilivideo.com'))
 	then return end
 	-- check if filepahth to python exist
-    if not o.python_path == "python" and not file_exists(o.python_path) then
-        log('未找到 Python 可执行文件: ' .. o.python_path)
-        return
-    end
+	if not o.python_path == "python" and not file_exists(o.python_path) then
+		log('未找到 Python 可执行文件: ' .. o.python_path)
+		return
+	end
 	-- get video cid
 	local cid = mp.get_opt('cid')
 	if cid == nil and path and path:find('^%a[%w.+-]-://') then

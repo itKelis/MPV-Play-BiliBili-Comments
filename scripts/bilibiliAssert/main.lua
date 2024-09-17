@@ -20,6 +20,8 @@ local o = {
 	percent = "0.75",
 	--弹幕屏蔽的关键词文件路径，支持绝对和相对路径
 	filter_file = "",
+	-- python可执行文件路径，默认为环境变量的python，若无法运行请指定 python[.exe] 的路径
+	python_path = "python",
 }
 
 options.read_options(o, _, function() end)
@@ -93,6 +95,11 @@ local function assprocess()
 	local path = mp.get_property("path")
 	if path and not path:find('^%a[%w.+-]-://') and not (path:find('bilibili.com') or path:find('bilivideo.com'))
 	then return end
+	-- check if filepahth to python exist
+	if not o.python_path == "python" and not file_exists(o.python_path) then
+		log('未找到 Python 可执行文件: ' .. o.python_path)
+		return
+	end
 	-- get video cid
 	local cid = mp.get_opt('cid')
 	if cid == nil and path and path:find('^%a[%w.+-]-://') then
@@ -124,19 +131,7 @@ local function assprocess()
 		dw = math.floor(dh * aspect)
 	end
 	-- choose to use python or .exe
-	-- local arg = { 'python', py_path, '-d', danmaku_dir, 
-	-- '-s', ''..dw..'x'..dh,
-	-- '-fn', o.fontname,
-	-- '-fs',  o.fontsize,
-	-- '-a', o.opacity,
-	-- '-dm', o.duration_marquee,
-	-- '-ds', o.duration_still,
-	-- '-flf', mp.command_native({ "expand-path", o.filter_file }),
-	-- '-p', tostring(math.floor(o.percent*dh)),
-	-- '-r',
-	-- cid,
-	-- }
-	local arg = { ''..directory..'\\Danmu2Ass.exe', py_path, '-d', danmaku_dir, 
+	local arg = { o.python_path, py_path, '-d', danmaku_dir, 
 	'-s', ''..dw..'x'..dh,
 	'-fn', o.fontname,
 	'-fs',  o.fontsize,
@@ -148,6 +143,18 @@ local function assprocess()
 	'-r',
 	cid,
 	}
+	-- local arg = { ''..directory..'\\Danmu2Ass.exe', '-d', danmaku_dir, 
+	-- '-s', ''..dw..'x'..dh,
+	-- '-fn', o.fontname,
+	-- '-fs',  o.fontsize,
+	-- '-a', o.opacity,
+	-- '-dm', o.duration_marquee,
+	-- '-ds', o.duration_still,
+	-- '-flf', mp.command_native({ "expand-path", o.filter_file }),
+	-- '-p', tostring(math.floor(o.percent*dh)),
+	-- '-r',
+	-- cid,
+	-- }
 	log('弹幕正在上膛')
 	-- run python to get comments
 	mp.command_native_async({

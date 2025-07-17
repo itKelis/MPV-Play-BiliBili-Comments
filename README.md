@@ -66,7 +66,7 @@ mpv 使用插件后：
 
 默认如果视频有弹幕就会自动显示，可以设置最小自动显示的弹幕数量或默认隐藏。
 
-在 input.conf 中添加以下代码以设置显示/隐藏弹幕的快捷键，替换`<key>`为你想设置的键位。
+在 `input.conf` 中添加以下代码以设置显示/隐藏弹幕的快捷键，替换`<key>`为你想设置的键位。
 
 ```
 <key> script-binding bilibiliAssert/tdanmu
@@ -87,5 +87,7 @@ mpv 使用插件后：
 ## 相关项目
 
 [巴哈姆特弹幕](https://github.com/s594569321/MPV-Play-BAHA-Comments)
+
+[ajtn123/mpv-config](https://github.com/ajtn123/mpv-config)
 
 <!-- 原来这文档写的什么玩意😅 -->

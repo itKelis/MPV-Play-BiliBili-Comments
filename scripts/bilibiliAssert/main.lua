@@ -24,6 +24,10 @@ local o = {
 	percent = "0.75",
 	--弹幕屏蔽的关键词文件路径，支持绝对和相对路径
 	filter_file = "",
+	--在osd显示日志
+	log_osd = false,
+	--使用Danmu2Ass.py，为false时使用Danmu2Ass.exe
+	use_python = true,
 	-- python可执行文件路径，默认为环境变量的python，若无法运行请指定 python[.exe] 的路径
 	python_path = "python",
 }
@@ -67,9 +71,14 @@ local function file_exists(path)
 	return false
 end
 
--- Log function: log to both terminal
+-- Log function: log to both terminal and MPV OSD (On-Screen Display)
 local function log(string, secs)
 	mp.msg.info(string)
+
+	if o.log_osd then
+		secs = secs or 2.5
+		mp.osd_message(string, secs)
+	end
 end
 
 -- load function
@@ -89,7 +98,7 @@ local function load_danmu(file)
 	end
 end
 
--- download function
+-- check danmaku exist, if true, load it
 local function Danmaku_check()
 	local cid = mp.get_opt('cid')
 
@@ -112,6 +121,7 @@ local function Danmaku_check()
 	Danmaku_process(cid)
 end
 
+-- call Danmu2Ass executable
 function Danmaku_process(cid)
 	if cid == nil then return end
 
@@ -120,13 +130,10 @@ function Danmaku_process(cid)
 	-- get script directory
 	local directory = mp.get_script_directory()
 	local py_path = utils.join_path(directory, 'Danmu2Ass.py')
+	local exe_path = utils.join_path(directory, 'Danmu2Ass.exe')
 
-	-- under windows platform, convert path format
-	if string.find(directory, "\\")
-	then
-		string.gsub(directory, "/", "\\")
-		py_path = '' .. directory .. '\\Danmu2Ass.py'
-	end
+	-- no need to convert forwardslashes and backslashes
+
 	local dw = 1920
 	local dh = 1080
 	local aspect = mp.get_property_number('width', 16) / mp.get_property_number('height', 9)
@@ -136,19 +143,36 @@ function Danmaku_process(cid)
 		dw = math.floor(dh * aspect)
 	end
 	-- choose to use python or .exe
-	local arg = {
-		o.python_path, py_path,
-		'-d', danmaku_dir,
-		'-s', '' .. dw .. 'x' .. dh,
-		'-fn', o.fontname,
-		'-fs', o.fontsize,
-		'-a', o.opacity,
-		'-dm', o.duration_marquee,
-		'-ds', o.duration_still,
-		'-flf', mp.command_native({ "expand-path", o.filter_file }),
-		'-p', tostring(math.floor(o.percent * dh)),
-		'-r', cid,
-	}
+	local arg = nil
+	if o.use_python then
+		arg = {
+			o.python_path, py_path,
+			'-d', danmaku_dir,
+			'-s', '' .. dw .. 'x' .. dh,
+			'-fn', o.fontname,
+			'-fs', o.fontsize,
+			'-a', o.opacity,
+			'-dm', o.duration_marquee,
+			'-ds', o.duration_still,
+			'-flf', mp.command_native({ "expand-path", o.filter_file }),
+			'-p', tostring(math.floor(o.percent * dh)),
+			'-r', cid,
+		}
+	else
+		arg = {
+			exe_path,
+			'-d', danmaku_dir,
+			'-s', '' .. dw .. 'x' .. dh,
+			'-fn', o.fontname,
+			'-fs', o.fontsize,
+			'-a', o.opacity,
+			'-dm', o.duration_marquee,
+			'-ds', o.duration_still,
+			'-flf', mp.command_native({ "expand-path", o.filter_file }),
+			'-p', tostring(math.floor(o.percent * dh)),
+			'-r', cid,
+		}
+	end
 
 	-- run python to get comments
 	mp.command_native_async({
@@ -167,6 +191,7 @@ function Danmaku_process(cid)
 	end)
 end
 
+-- toggle danmaku visibility
 function Danmaku_toggle()
 	if not danmu_file then return end
 
@@ -180,6 +205,7 @@ function Danmaku_toggle()
 	end
 end
 
+-- remove danmaku
 function Danmaku_terminate()
 	if not danmu_file then return end
 	log('文件结束')
@@ -193,6 +219,7 @@ function Danmaku_terminate()
 	mp.commandv('vf', 'remove', '@60FPS')
 end
 
+-- hide danmaku
 function Danmaku_unshow()
 	log('隐藏弹幕')
 	danmu_open = false
@@ -200,6 +227,7 @@ function Danmaku_unshow()
 	mp.commandv('vf', 'remove', '@60FPS')
 end
 
+-- show danmaku
 function Danmaku_show()
 	log('显示弹幕')
 	danmu_open = true

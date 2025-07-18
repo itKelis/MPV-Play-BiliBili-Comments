@@ -1,5 +1,4 @@
--- https://github.com/ajtn123/MPV-Play-BiliBili-Comments
--- Original: https://github.com/itKelis/MPV-Play-BiliBili-Comments
+-- https://github.com/itKelis/MPV-Play-BiliBili-Comments
 
 local mp = require 'mp'
 local utils = require 'mp.utils'

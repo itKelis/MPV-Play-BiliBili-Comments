@@ -89,10 +89,16 @@ bilibiliAssert-mincount=<最小弹幕数量>
 
 弹幕数量根据文件大小估算，同时转换器会控制弹幕密集区域的弹幕密度，保证不重叠，所以这个数量大概率与网页显示的弹幕装填量不一致——对于大多数视频，数量相近；对于高密度弹幕视频，估值可能较小。
 
-在 `input.conf` 中添加以下代码以设置显示/隐藏弹幕的快捷键，替换`<key>`为你想设置的键位。
+显示/隐藏弹幕的快捷键默认为 `b`。在 `input.conf` 中添加以下代码以设置不同键位。
 
 ```
-<key> script-binding bilibiliAssert/tdanmu
+<key> script-binding bilibiliAssert/toggle
+```
+
+对于帧率低于 45fps 的视频，在播放速度小于 1.5 倍速时，自动添加提高 fps 的 vf 滤镜，通过以下设置关闭。
+
+```
+bilibiliAssert-fps_vf=<yes/no>
 ```
 
 ## 加载原理

@@ -5,7 +5,7 @@ local utils = require 'mp.utils'
 local options = require 'mp.options'
 
 local o = {
-	--自动显示弹幕
+	--是否自动显示弹幕
 	autoplay = true,
 	--最小弹幕数量
 	mincount = 1,
@@ -23,9 +23,11 @@ local o = {
 	percent = "0.75",
 	--弹幕屏蔽的关键词文件路径，支持绝对和相对路径
 	filter_file = "",
-	--在osd显示日志
+	--是否对低帧率视频自动添加fps滤镜，以保证滚动弹幕流畅
+	fps_vf = true,
+	--是否在osd显示日志
 	log_osd = false,
-	--使用Danmu2Ass.py，为false时使用Danmu2Ass.exe
+	--是否使用Danmu2Ass.py，为false时使用Danmu2Ass.exe
 	use_python = true,
 	-- python可执行文件路径，默认为环境变量的python，若无法运行请指定 python[.exe] 的路径
 	python_path = "python",
@@ -97,7 +99,7 @@ local function load_danmu(file)
 	end
 end
 
--- check danmaku exist, if true, load it
+-- check if danmaku exists, load if true
 local function Danmaku_check()
 	local cid = mp.get_opt('cid')
 
@@ -196,10 +198,7 @@ function Danmaku_toggle()
 
 	if danmu_open then
 		Danmaku_unshow()
-		return
-	end
-
-	if not danmu_open and mp.get_property_native('secondary-sid') then
+	elseif mp.get_property_native('secondary-sid') then
 		Danmaku_show()
 	end
 end
@@ -215,7 +214,7 @@ function Danmaku_terminate()
 	danmu_open = false
 	mp.set_property_native("secondary-sub-visibility", sec_sub_visibility)
 	mp.set_property_native("secondary-sub-ass-override", sec_sub_ass_override)
-	mp.commandv('vf', 'remove', '@60FPS')
+	mp.commandv('vf', 'remove', '@Danmaku-FPS')
 end
 
 -- hide danmaku
@@ -223,7 +222,7 @@ function Danmaku_unshow()
 	log('隐藏弹幕')
 	danmu_open = false
 	mp.set_property_native("secondary-sub-visibility", false)
-	mp.commandv('vf', 'remove', '@60FPS')
+	mp.commandv('vf', 'remove', '@Danmaku-FPS')
 end
 
 -- show danmaku
@@ -231,12 +230,25 @@ function Danmaku_show()
 	log('显示弹幕')
 	danmu_open = true
 	mp.set_property_native("secondary-sub-visibility", true)
-	if mp.get_property_number("container-fps", 30) < 45 then
-		mp.commandv('vf', 'append', '@60FPS:lavfi="fps=fps=60:round=down"')
+	Add_fps_vf()
+end
+
+function Add_fps_vf()
+	if not danmu_open or not o.fps_vf then return end
+
+	local video_fps = mp.get_property_number("container-fps", 30)
+	local video_speed = mp.get_property_number("speed", 1)
+
+	if video_fps < 45 and video_speed < 1.5 then
+		mp.commandv('vf', 'append', '@Danmaku-FPS:lavfi="fps=fps=60:round=down"')
+	else
+		mp.commandv('vf', 'remove', '@Danmaku-FPS')
 	end
 end
 
-mp.add_key_binding(nil, 'tdanmu', Danmaku_toggle)
 mp.register_event("file-loaded", Danmaku_check)
 mp.register_event("end-file", Danmaku_terminate)
+mp.observe_property("speed", nil, Add_fps_vf)
+
 mp.register_script_message('load-danmaku', Danmaku_process)
+mp.add_key_binding('b', 'toggle', Danmaku_toggle)

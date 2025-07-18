@@ -1,5 +1,3 @@
-# 此脚本修改自 [itKelis/MPV-Play-BiliBili-Comments](https://github.com/itKelis/MPV-Play-BiliBili-Comments)
-
 # 使用 mpv 自动下载弹幕并加载
 
 - 配合 [yt-dlp](https://github.com/yt-dlp/yt-dlp) 或 [External Player](https://github.com/LuckyPuppy514/external-player) 油猴脚本
@@ -7,7 +5,7 @@
 - 本项目同时支持 Windows, Linux, Macos(也许)
 - 弹幕体验与 b 站播放器几乎没有区别
 - 核心代码由 Danmu2Ass 修改而来，并对性能进行优化，加载时间可以忽略不计
-- python>=3.6 即可运行，完全使用 python 内置库编写无需安装第三方库
+- python>=3.6 即可运行，完全使用 python 内置库编写无需安装第三方库，并提供可执行文件，没有 python 也可以运行
 - 脚本使用异步运行，对视频加载无影响
 
 ## 背景
@@ -24,49 +22,72 @@ mpv 使用插件后：
 
 ## 安装
 
-确保安装 [python](https://www.python.org/downloads/) 环境，3.6 版本以上，推荐最新。
-
 下载[本仓库](https://github.com/ajtn123/MPV-Play-BiliBili-Comments/archive/refs/heads/main.zip)，将解压后的 `scripts` 文件夹放置在 mpv 配置目录。
 
-### 使用
+### （默认/推荐）方法 1：调用 `Danmu2Ass.py`
+
+确保安装 [python](https://www.python.org/downloads/) 3.6 版本以上。
+
+如果 python **没有**安装在系统环境，请在 `script-opts` 添加：
+
+```
+bilibiliAssert-python_path=<python.exe 路径>
+```
+
+### （仅 Windows）方法 2：调用 `Danmu2Ass.exe`
+
+无需安装 python，请在 `script-opts` 添加：
+
+```
+bilibiliAssert-use_python=no
+```
+
+> 不使用的文件——`Danmu2Ass.py` 或 `Danmu2Ass.exe`——可以删除。
+
+## 使用
 
 以下每种方法可单独使用。
 
-#### 1. 使用 External Player 油猴脚本
+### 1. 使用 External Player 油猴脚本
 
 安装油猴脚本：https://greasyfork.org/zh-CN/scripts/518677-external-player
 
 在 bilibili 网页中点击 mpv 图标将视频流传输到 mpv 后将会自动加载弹幕
 
-#### 2. 使用 YT-DLP
+### 2. 使用 YT-DLP
 
 确保安装 [YT-DLP](https://github.com/yt-dlp/yt-dlp)。
 
 命令行运行：`mpv <bilibili 视频网址>`
 
-#### 3. 使用 script-message
+### 3. 使用 script-message
 
 此方法适用于想在任意视频源上加载 bilibili 弹幕的情况。例如播放下载到本地的番剧，并加载弹幕。
 
 你需要自己获取弹幕视频的 cid：
 
 - 安装油猴脚本：https://greasyfork.org/zh-CN/scripts/542791-bilibili-cid，可以在视频下方弹幕输入框内看到 cid，点击复制。
-- 在视频网页打开 devtools (F12/右键-检查)，顶部切换到控制台选项卡，输入 `cid`，回车，也可以获取到视频的 cid。
+- 在视频网页打开 devtools (F12/右键-检查)，顶部切换到控制台选项卡，输入 `cid`，回车，也可以获取到视频的 cid。（无需引号）
 - 更多方法见[此专栏](https://www.bilibili.com/read/cv7923601)。
 
 打开想要播放的视频，在 mpv console 运行命令：`script-message load-danmaku <cid>`
 
-#### 4. 使用启动参数
+### 4. 使用启动参数
 
 适用场景与 cid 获取方法同上。
 
 命令行运行：`mpv --script-opts-append="cid=<cid>" <视频文件>`
 
-### 完成
+## 配置
 
 默认如果视频有弹幕就会自动显示，可以设置最小自动显示的弹幕数量或默认隐藏。
 
-弹幕数量根据文件大小估算，同时转换器会控制弹幕密集区域的弹幕密度，保证不重叠，所以这个数量大概率与网页显示的弹幕装填量不一致——对于大多数视频，数量相近；对于高密度弹幕视频，数量较小。
+```
+bilibiliAssert-autoplay=<打开视频时显示（yes）/隐藏（no）弹幕>
+bilibiliAssert-mincount=<最小弹幕数量>
+```
+
+弹幕数量根据文件大小估算，同时转换器会控制弹幕密集区域的弹幕密度，保证不重叠，所以这个数量大概率与网页显示的弹幕装填量不一致——对于大多数视频，数量相近；对于高密度弹幕视频，估值可能较小。
 
 在 `input.conf` 中添加以下代码以设置显示/隐藏弹幕的快捷键，替换`<key>`为你想设置的键位。
 
@@ -89,7 +110,3 @@ mpv 使用插件后：
 ## 相关项目
 
 [巴哈姆特弹幕](https://github.com/s594569321/MPV-Play-BAHA-Comments)
-
-[ajtn123/mpv-config](https://github.com/ajtn123/mpv-config)
-
-<!-- 原来这文档写的什么玩意😅 -->

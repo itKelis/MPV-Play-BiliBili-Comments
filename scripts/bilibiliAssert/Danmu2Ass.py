@@ -432,14 +432,21 @@ def export(func):
 
 
 def getComments(cid,font_size = 25):
-    response = request.urlopen(request.Request(
-        url = ''.join(['https://comment.bilibili.com/',cid[0],'.xml']),
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0'
-        }
-    ))
-    data = str(zlib.decompress(response.read(), -zlib.MAX_WBITS), "utf-8")
-    response.close()
+    try:
+        response = request.urlopen(request.Request(
+            url = ''.join(['https://comment.bilibili.com/', cid[0], '.xml']),
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0',
+                'Referer': 'https://www.bilibili.com'
+            }
+        ), context=ssl.create_default_context())
+        data = str(zlib.decompress(response.read(), -zlib.MAX_WBITS), "utf-8")
+        response.close()
+    except urllib.error.HTTPError as e:
+        print(f"HTTP Error occurred: {e}")
+        if e.code == 412:
+            print("412 Precondition Failed: 服务器上的资源不满足请求中的前提条件。")
+        sys.exit(1)
     comments = []
     str_io = io.StringIO(data)
     comments.extend(ReadCommentsBilibili(FilterBadChars(str_io), font_size))
